@@ -19,8 +19,85 @@ emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal
 -zui_std_store_default_app_config b:status_size 5
 -zui_std_store_default_app_config s:text_mode off
 
-local internal  # trick variable to make a handler no-restart
+local internal      # trick variable to make a handler no-restart
+integer show_all=0  # whether to show the all-parameters module unwinded
 local -a logs   # own logs queue
+
+local -a all_black_list
+all_black_list=(
+    "functions"
+    "history"
+    "historywords"
+    "widgets"
+
+    "__list"
+    "__slist"
+    "__last_element"
+    "__selection"
+    "__action"
+    "__cursor_state"
+    "__wname_main"
+    "__wname_status"
+    "__status_height"
+    "__status_width"
+    "__page_height"
+    "__page_width"
+    "__main_height"
+    "__main_width"
+    "__prev_start_idx"
+    "__prev_search_buffer"
+    "__colormap2"
+    "__actv_text"
+    "__header"
+    "__current_difference"
+    "__last_element_difference"
+    "__tmp"
+    "__disp_list"
+    "__disp_list2"
+    "__segments"
+    "__final_key"
+    "__jump_id"
+    "__nseg"
+    "__do_exit"
+    "__prev_uniq_mode"
+    "__jump_data"
+
+    "MARK_CODES"
+    "MARK_END_CODES"
+    "MARK2_CODES"
+    "MARK2_END_CODES"
+    "end_idx"
+
+    "fg"
+    "fg_bold"
+    "fg_no_bold"
+    "bg"
+    "bg_bold"
+    "bg_no_bold"
+    "bold_color"
+    "prompt_newline"
+
+
+    "BG_YELLOW"
+    "BG_GREEN"
+    "BG_CYAN"
+    "BG_MAGENTA"
+    "BG_WHITE"
+    "BG_BLUE"
+    "BG_RED"
+    "BG_BLACK"
+    "BG_DEFAULT"
+
+    "YELLOW"
+    "GREEN"
+    "CYAN"
+    "MAGENTA"
+    "WHITE"
+    "BLUE"
+    "RED"
+    "BLACK"
+    "DEFAULT"
+)
 
 # Welcoming message
 logs+=( "Welcome! |Number of user-created parameters: |#${#ZBROWSE_CHANGED_IPARAMS}" )
@@ -82,9 +159,6 @@ zbrowse_param_action() {
     fi
 
     logs+=( "|||Showed declare-text of: |$data2" )
-
-    # Request regeneration, pass on data3 as REGENERATE_ARG
-    reply=( ",mod${mod}_ice1," "$data2" )
 }
 
 zbrowse_type_action() {
@@ -104,9 +178,65 @@ zbrowse_type_action() {
     fi
 
     logs+=( "|||Showed type of: |$data2" )
+}
 
-    # Request regeneration, pass on data3 as REGENERATE_ARG
-    reply=( ",mod${mod}_ice1," "$data2" )
+
+allparams_generator_B() {
+    local mod="$1" ice="$2" arg="$3" param lparam tpe space=" "
+    local -a aparam atype avalue
+    integer pdiff tdiff
+
+    reply=( "${ZUI[MAGENTA]}## All parameters ##${ZUI[FMT_END]}" )
+
+    if (( show_all == 0 )); then
+        -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 2 1'
+        # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
+    else
+        echo "Yes generating" >> /tmp/reply
+        for param in "${(k)parameters[@]}"; do
+            [[ "$param" = [?*\$#!@] ]] && continue
+            [[ -n "${all_black_list[(re)$param]}" ]] && continue
+
+            aparam=() atype=() avalue=() tpe="${(Pt)param}" pdiff=0 tdiff=0
+
+            lparam="$param"
+            (( ${#lparam} <= 25 )) && pdiff=$(( 25 - ${#lparam} )) || lparam="${lparam[1,22]}...";
+            (( ${#tpe} <= 25 )) && tdiff=$(( 25 - ${#tpe} )) || tpe="${tpe[1,22]}...";
+
+            -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${lparam}${ZUI[FMT_END]}" zbrowse_param_action aparam
+            -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${tpe}${ZUI[FMT_END]}" zbrowse_type_action atype
+
+            if [[ "${(Pt)param}" = *association* ]]; then
+                local -a elems
+                local txt
+                elems=( "${(Pkv@)param}" )
+                elems=( "${(@)elems[1,50]}" )
+                elems=( "${(qq)elems[@]}" )
+                txt="${elems[*]}"
+                txt="${txt[1,300]}"
+                -zui_std_special_text "$txt" avalue
+            elif [[ "${(Pt)param}" = *array* ]]; then
+                local -a elems
+                local txt
+                elems=( "${(P@)param}" )
+                elems=( "${(@)elems[1,50]}" )
+                elems=( "${(qq)elems[@]}" )
+                txt="${elems[*]}"
+                txt="${txt[1,300]}"
+                -zui_std_special_text "$txt" avalue
+            else
+                local txt
+                txt="${(P)param}"
+                txt="${txt[1,300]}"
+                -zui_std_special_text "${(qq)txt}" avalue
+            fi
+
+            reply+=( "${aparam[1]}${(r:pdiff+1:: :)space} ${atype[1]}${(r:tdiff+1:: :)space} ${avalue[1]}" )
+        done
+    fi
+
+    # Non-selectable lines  Hops to jump with [ and ]   Local anchors
+    reply2=( 1 )            reply3=( 1 )                reply4=( )
 }
 
 -zui-standard-status-callback() {
@@ -115,7 +245,7 @@ zbrowse_type_action() {
 }
 
 ## Start application ##
-zui-event-loop 1:iparams_generator_A
+zui-event-loop 1:iparams_generator_A 1:allparams_generator_B
 
 -zui_std_cleanup serialize
 
