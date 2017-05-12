@@ -4,6 +4,8 @@ When doing a shell work, it is often the case that `echo $variable` is invoked m
 to check result of a loop, etc. Now, just pressing `Ctrl-B` is needed, with `ZBrowse` – `Zshell`
 variable browser:
 
+![ZBrowse](https://github.com/zdharma/zbrowse/blob/master/images/zbrowse.png)
+
 (you can resize the video like web page)
 
 [![asciicast](https://asciinema.org/a/120239.png)](https://asciinema.org/a/120239)
