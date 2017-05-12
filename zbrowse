@@ -28,16 +28,21 @@ iparams_generator_A() {
 
     local -a aparam atype avalue
 
+    reply=()
+
     for param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
         [[ "$param" = [?*\$#!] ]] && continue
-        -zui_std_button_ext "param_$param" "$mod" "$param" "${(P)param}" "" "${ZUI[MAGENTA]}${param}${ZUI[FMT_END]}" zbrowse_param_action aparam
-        -zui_std_button_ext ""
-    done
+        aparam=() atype=() avalue=()
+        -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${param}${ZUI[FMT_END]}" zbrowse_param_action aparam
+        -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${(Pt)param}${ZUI[FMT_END]}" zbrowse_param_action atype
+        if [[ "${(Pt)param}" = *association* ]]; then
+            -zui_std_special_text "${(Pkv)param}" avalue
+        else
+            -zui_std_special_text "${(P)param}" avalue
+        fi
 
-    # Content
-    reply=(
-        "${aparam[@]}"
-    )
+        reply+=( "${(r:50:: :)aparam[1]} ${(r:50:: :)atype[1]} ${avalue[1]}" )
+    done
 
     # Non-selectable lines  Hops to jump with [ and ]   Local anchors
     reply2=( )              reply3=( 1 )                reply4=( )
