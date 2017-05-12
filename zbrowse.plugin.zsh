@@ -32,7 +32,7 @@ typeset -ghH ZBROWSE_IPARAMS_POST
 # Holds black-listed parameters
 typeset -gahH ZBROWSE_BLACK_LIST
 ZBROWSE_BLACK_LIST=(
-    '?' '*' '$' '#' '!'
+    '?' '*' '$' '#' '!' '@'
 
     ZUI_PB_WORDS
     ZUI_PB_LEFT
