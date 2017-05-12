@@ -55,11 +55,11 @@ zbrowse_param_action() {
     if zle; then
         zle reset-prompt
         print
-        print "${fg[yellow]}Showing \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+        print -r -- "${fg[yellow]}Showing \`${fg[green]}$data2${fg[yellow]}':$reset_color"
         declare -p "$data2"
         read -q tmp
     else
-        print -r "${fg[yellow]}Showing \`$data2':$reset_color"
+        print -r -- "${fg[yellow]}Showing \`$data2':$reset_color"
         declare -p "$data2"
         read -q tmp
     fi
@@ -75,11 +75,11 @@ zbrowse_type_action() {
     if zle; then
         zle reset-prompt
         print
-        print -r "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+        print -r -- "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
         echo "${(Pt)data2}"
         read -q tmp
     else
-        print -r "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+        print -r -- "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
         echo "${(Pt)data2}"
         read -q tmp
     fi
