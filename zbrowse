@@ -55,7 +55,7 @@ iparams_generator_A() {
             elems=( "${(qq)elems[@]}" )
             -zui_std_special_text "${elems[*]}" avalue
         else
-            -zui_std_special_text "${(P)param}" avalue
+            -zui_std_special_text "${(Pqq)param}" avalue
         fi
 
         reply+=( "${aparam[1]}${(r:pdiff+1:: :)space} ${atype[1]}${(r:tdiff+1:: :)space} ${avalue[1]}" )
