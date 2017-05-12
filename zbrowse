@@ -97,6 +97,8 @@ zbrowse_type_action() {
         read -q tmp
     fi
 
+    logs+=( "|||Showed type of: |$data2" )
+
     # Request regeneration, pass on data3 as REGENERATE_ARG
     reply=( ",mod${mod}_ice1," "$data2" )
 }
