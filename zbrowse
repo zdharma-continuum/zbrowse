@@ -31,7 +31,7 @@ iparams_generator_A() {
 
     local -a aparam atype avalue
 
-    reply=()
+    reply=( "${ZUI[MAGENTA]}## User-defined parameters (interactive shell use) ##${ZUI[FMT_END]}" )
 
     for param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
         [[ "$param" = [?*\$#!] ]] && continue
@@ -56,7 +56,7 @@ iparams_generator_A() {
     done
 
     # Non-selectable lines  Hops to jump with [ and ]   Local anchors
-    reply2=( )              reply3=( 1 )                reply4=( )
+    reply2=( 1 )            reply3=( 1 )                reply4=( )
 }
 
 zbrowse_param_action() {
