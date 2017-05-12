@@ -73,11 +73,11 @@ zbrowse_param_action() {
         zle reset-prompt
         print
         print -r -- "${fg[yellow]}Showing \`${fg[green]}$data2${fg[yellow]}':$reset_color"
-        declare -p "$data2"
+        ( declare -p "$data2" )
         read -q tmp
     else
         print -r -- "${fg[yellow]}Showing \`$data2':$reset_color"
-        declare -p "$data2"
+        ( declare -p "$data2" )
         read -q tmp
     fi
 
