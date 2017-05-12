@@ -15,7 +15,7 @@ bindkey '^B' zbrowse
 zmodload zsh/parameter || { echo "No zsh/parameter module, zdharma/zbrowse not registering itself"; return 0 }
 
 # Holds defined parameters at preexec
-typeset -ghH ZBROWSE_PARAMS_BEFORE
+typeset -gH ZBROWSE_PARAMS_BEFORE
 
 # Holds interactively defined parameters
 typeset -gaUH ZBROWSE_IPARAMS
@@ -24,13 +24,13 @@ typeset -gaUH ZBROWSE_IPARAMS
 typeset -gaUH ZBROWSE_CHANGED_IPARAMS
 
 # Holds types of parameters before change
-typeset -ghH ZBROWSE_IPARAMS_PRE
+typeset -gH ZBROWSE_IPARAMS_PRE
 
 # Holds types of parameters after change
-typeset -ghH ZBROWSE_IPARAMS_POST
+typeset -gH ZBROWSE_IPARAMS_POST
 
 # Holds black-listed parameters
-typeset -gahH ZBROWSE_BLACK_LIST
+typeset -gaH ZBROWSE_BLACK_LIST
 ZBROWSE_BLACK_LIST=(
     '?' '*' '$' '#' '!' '@'
 
