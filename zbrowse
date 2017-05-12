@@ -36,7 +36,10 @@ iparams_generator_A() {
         -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${param}${ZUI[FMT_END]}" zbrowse_param_action aparam
         -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${(Pt)param}${ZUI[FMT_END]}" zbrowse_type_action atype
         if [[ "${(Pt)param}" = *association* ]]; then
-            -zui_std_special_text "${(Pkv)param}" avalue
+            local -a elems
+            elems=( "${(Pkv@)param}" )
+            elems=( "${(qq)elems[@]}" )
+            -zui_std_special_text "${elems[*]}" avalue
         else
             -zui_std_special_text "${(P)param}" avalue
         fi
