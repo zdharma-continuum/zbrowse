@@ -40,6 +40,11 @@ iparams_generator_A() {
             elems=( "${(Pkv@)param}" )
             elems=( "${(qq)elems[@]}" )
             -zui_std_special_text "${elems[*]}" avalue
+        elif [[ "${(Pt)param}" = *array* ]]; then
+            local -a elems
+            elems=( "${(P@)param}" )
+            elems=( "${(qq)elems[@]}" )
+            -zui_std_special_text "${elems[*]}" avalue
         else
             -zui_std_special_text "${(P)param}" avalue
         fi
