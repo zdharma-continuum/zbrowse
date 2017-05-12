@@ -34,7 +34,7 @@ iparams_generator_A() {
         [[ "$param" = [?*\$#!] ]] && continue
         aparam=() atype=() avalue=()
         -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${param}${ZUI[FMT_END]}" zbrowse_param_action aparam
-        -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${(Pt)param}${ZUI[FMT_END]}" zbrowse_param_action atype
+        -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${(Pt)param}${ZUI[FMT_END]}" zbrowse_type_action atype
         if [[ "${(Pt)param}" = *association* ]]; then
             -zui_std_special_text "${(Pkv)param}" avalue
         else
@@ -61,6 +61,26 @@ zbrowse_param_action() {
     else
         print -r "${fg[yellow]}Showing \`$data2':$reset_color"
         declare -p "$data2"
+        read -q tmp
+    fi
+
+    # Request regeneration, pass on data3 as REGENERATE_ARG
+    reply=( ",mod${mod}_ice1," "$data2" )
+}
+
+zbrowse_type_action() {
+    local id="$1" mod="$2" data2="$3" data3="$4" data4="$4"
+    local tmp
+
+    if zle; then
+        zle reset-prompt
+        print
+        print -r "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+        echo "${(Pt)data2}"
+        read -q tmp
+    else
+        print -r "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+        echo "${(Pt)data2}"
         read -q tmp
     fi
 
