@@ -27,17 +27,23 @@ logs+=( "Welcome! |Number of user-created parameters: |#${#ZBROWSE_CHANGED_IPARA
 
 # Generator for module 1
 iparams_generator_A() {
-    local mod="$1" ice="$2" arg="$3" param
-
+    local mod="$1" ice="$2" arg="$3" param lparam tpe space=" "
     local -a aparam atype avalue
+    integer pdiff tdiff
 
     reply=( "${ZUI[MAGENTA]}## User-defined parameters (interactive shell use) ##${ZUI[FMT_END]}" )
 
     for param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
         [[ "$param" = [?*\$#!] ]] && continue
-        aparam=() atype=() avalue=()
-        -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${param}${ZUI[FMT_END]}" zbrowse_param_action aparam
-        -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${(Pt)param}${ZUI[FMT_END]}" zbrowse_type_action atype
+        aparam=() atype=() avalue=() tpe="${(Pt)param}" pdiff=0 tdiff=0
+
+        lparam="$param"
+        (( ${#lparam} <= 25 )) && pdiff=$(( 25 - ${#lparam} )) || lparam="${lparam[1,22]}...";
+        (( ${#tpe} <= 25 )) && tdiff=$(( 25 - ${#tpe} )) || tpe="${tpe[1,22]}...";
+
+        -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${lparam}${ZUI[FMT_END]}" zbrowse_param_action aparam
+        -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${tpe}${ZUI[FMT_END]}" zbrowse_type_action atype
+
         if [[ "${(Pt)param}" = *association* ]]; then
             local -a elems
             elems=( "${(Pkv@)param}" )
@@ -52,7 +58,7 @@ iparams_generator_A() {
             -zui_std_special_text "${(P)param}" avalue
         fi
 
-        reply+=( "${(r:50:: :)aparam[1]} ${(r:50:: :)atype[1]} ${avalue[1]}" )
+        reply+=( "${aparam[1]}${(r:pdiff+1:: :)space} ${atype[1]}${(r:tdiff+1:: :)space} ${avalue[1]}" )
     done
 
     # Non-selectable lines  Hops to jump with [ and ]   Local anchors
