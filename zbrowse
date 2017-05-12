@@ -97,7 +97,7 @@ zbrowse_type_action() {
 }
 
 -zui-standard-status-callback() {
-    [[ "${#logs}" -gt 0 ]] && { reply=( "${(s:|:)logs[1]}" ); logs=( ${(@)logs[2,-1]} ); return 1; }
+    [[ "${#logs}" -gt 0 ]] && { reply=( "${(s:|:@)logs[1]}" ); logs=( ${(@)logs[2,-1]} ); return 1; }
     return 0  # 0 is no message
 }
 
