@@ -1,0 +1,78 @@
+# Started from Zle or from command line
+#
+# Allows to browse Zsh data structures, but it's main
+# use is to see all *interactively* defined parameters
+# (variables), so that you don't have to do echo $test
+# all the time. Bound to Ctrl-B
+
+if [[ "${+functions[-zui_std_cleanup]}" = "0" ]]; then
+    echo "ZBrowse uses ZUI plugin, please load https://github.com/zdharma/zui/ with your plugin manager, or source it"
+    return 1
+fi
+
+-zui_std_cleanup deserialize:"zui-demo-zbrowse"
+-zui_std_init app:"zui-demo-zbrowse" app_name:"Zsh Structures Browser"
+emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal
+-zui_std_init2 # after emulate -LR
+
+-zui_std_store_default_app_config b:border 1
+-zui_std_store_default_app_config b:status_size 5
+-zui_std_store_default_app_config s:text_mode off
+
+local internal  # trick variable to make a handler no-restart
+local -a logs   # own logs queue
+
+# Generator for module 1
+iparams_generator_A() {
+    local mod="$1" ice="$2" arg="$3" param
+
+    local -a aparam atype avalue
+
+    for param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
+        [[ "$param" = [?*\$#!] ]] && continue
+        -zui_std_button_ext "param_$param" "$mod" "$param" "${(P)param}" "" "${ZUI[MAGENTA]}${param}${ZUI[FMT_END]}" zbrowse_param_action aparam
+        -zui_std_button_ext ""
+    done
+
+    # Content
+    reply=(
+        "${aparam[@]}"
+    )
+
+    # Non-selectable lines  Hops to jump with [ and ]   Local anchors
+    reply2=( )              reply3=( 1 )                reply4=( )
+}
+
+zbrowse_param_action() {
+    local id="$1" mod="$2" data2="$3" data3="$4" data4="$4"
+    local tmp
+
+    if zle; then
+        zle reset-prompt
+        print
+        print "${fg[yellow]}Showing \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+        declare -p "$data2"
+        read -q tmp
+    else
+        print -r "${fg[yellow]}Showing \`$data2':$reset_color"
+        declare -p "$data2"
+        read -q tmp
+    fi
+
+    # Request regeneration, pass on data3 as REGENERATE_ARG
+    reply=( ",mod${mod}_ice1," "$data2" )
+}
+
+-zui-standard-status-callback() {
+    [[ "${#logs}" -gt 0 ]] && { reply=( "${(s:|:)logs[1]}" ); logs=( ${(@)logs[2,-1]} ); return 1; }
+    return 0  # 0 is no message
+}
+
+## Start application ##
+zui-event-loop 1:iparams_generator_A
+
+-zui_std_cleanup serialize
+
+return 0
+
+# vim:ft=zsh
