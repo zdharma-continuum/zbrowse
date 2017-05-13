@@ -6,7 +6,7 @@
 #
 
 ZERO="${(%):-%N}" # this gives immunity to functionargzero being unset
-ZBROWSE_REPO_DIR="${0%/*}"
+ZBROWSE_REPO_DIR="${ZERO%/*}"
 
 autoload zbrowse
 zle -N zbrowse
