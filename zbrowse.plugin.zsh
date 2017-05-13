@@ -8,6 +8,16 @@
 ZERO="${(%):-%N}" # this gives immunity to functionargzero being unset
 ZBROWSE_REPO_DIR="${ZERO%/*}"
 
+#
+# Update FPATH if:
+# 1. Not loading with Zplugin
+# 2. Not having fpath already updated (that would equal: using other plugin manager)
+#
+
+if [[ -z "$ZPLG_CUR_PLUGIN" && "${fpath[(r)$ZBROWSE_REPO_DIR]}" != $ZBROWSE_REPO_DIR ]]; then
+    fpath+=( "$ZBROWSE_REPO_DIR" )
+fi
+
 autoload zbrowse
 zle -N zbrowse
 bindkey '^B' zbrowse
