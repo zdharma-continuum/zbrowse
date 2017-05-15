@@ -214,7 +214,6 @@ allparams_generator_B() {
         -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 2 1'
         # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
     else
-        echo "Yes generating" >> /tmp/reply
         for param in "${(k)parameters[@]}"; do
             [[ "$param" = [?*\$#!@] ]] && continue
             [[ -n "${all_black_list[(re)$param]}" ]] && continue
