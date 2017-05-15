@@ -25,11 +25,13 @@ local -a logs   # own logs queue
 
 local -a all_black_list
 all_black_list=(
+    # Zsh special
     "functions"
     "history"
     "historywords"
     "widgets"
 
+    # ZUI
     "__list"
     "__slist"
     "__last_element"
@@ -62,6 +64,7 @@ all_black_list=(
     "__prev_uniq_mode"
     "__jump_data"
 
+    # ZUI2
     "zuiel_line_set"
     "zuiel_lanchors"
     "zuiel_size"
@@ -84,6 +87,7 @@ all_black_list=(
     "zuiel_prev_size"
     "zuiel_hops"
 
+    # ZUI3
     "MARK"
     "MARK_CODES"
     "MARK_END_CODES"
@@ -91,6 +95,7 @@ all_black_list=(
     "MARK2_END_CODES"
     "end_idx"
 
+    # autoload colors
     "fg"
     "fg_bold"
     "fg_no_bold"
@@ -100,6 +105,7 @@ all_black_list=(
     "bold_color"
     "prompt_newline"
 
+    # ZUI4
     "BG_YELLOW"
     "BG_GREEN"
     "BG_CYAN"
@@ -110,6 +116,7 @@ all_black_list=(
     "BG_BLACK"
     "BG_DEFAULT"
 
+    # ZUI5
     "YELLOW"
     "GREEN"
     "CYAN"
@@ -119,6 +126,20 @@ all_black_list=(
     "RED"
     "BLACK"
     "DEFAULT"
+
+    # Generator B
+    __mod
+    __ice
+    __arg
+    __param
+    __lparam
+    __tpe
+    __space
+    __aparam
+    __atype
+    __avalue
+    __pdiff
+    __tdiff
 )
 
 # Welcoming message
@@ -126,38 +147,38 @@ logs+=( "Welcome! |Number of user-created parameters: |#${#ZBROWSE_CHANGED_IPARA
 
 # Generator for module 1
 iparams_generator_A() {
-    local mod="$1" ice="$2" arg="$3" param lparam tpe space=" "
-    local -a aparam atype avalue
-    integer pdiff tdiff
+    local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
+    local -a __aparam __atype __avalue
+    integer __pdiff __tdiff
 
     reply=( "${ZUI[MAGENTA]}## User-defined parameters (interactive shell use) ##${ZUI[FMT_END]}" )
 
-    for param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
-        [[ "$param" = [?*\$#!] ]] && continue
-        aparam=() atype=() avalue=() tpe="${(Pt)param}" pdiff=0 tdiff=0
+    for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
+        [[ "$__param" = [?*\$#!] ]] && continue
+        __aparam=() __atype=() __avalue=() __tpe="${(Pt)__param}" __pdiff=0 __tdiff=0
 
-        lparam="$param"
-        (( ${#lparam} <= 25 )) && pdiff=$(( 25 - ${#lparam} )) || lparam="${lparam[1,22]}...";
-        (( ${#tpe} <= 25 )) && tdiff=$(( 25 - ${#tpe} )) || tpe="${tpe[1,22]}...";
+        __lparam="$__param"
+        (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
+        (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
-        -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${lparam}${ZUI[FMT_END]}" zbrowse_param_action aparam
-        -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${tpe}${ZUI[FMT_END]}" zbrowse_type_action atype
+        -zui_std_button_ext "param_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" zbrowse_param_action __aparam
+        -zui_std_button_ext "type_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" zbrowse_type_action __atype
 
-        if [[ "${(Pt)param}" = *association* ]]; then
+        if [[ "${(Pt)__param}" = *association* ]]; then
             local -a elems
-            elems=( "${(Pkv@)param}" )
+            elems=( "${(Pkv@)__param}" )
             elems=( "${(qq)elems[@]}" )
-            -zui_std_special_text "${elems[*]}" avalue
-        elif [[ "${(Pt)param}" = *array* ]]; then
+            -zui_std_special_text "${elems[*]}" __avalue
+        elif [[ "${(Pt)__param}" = *array* ]]; then
             local -a elems
-            elems=( "${(P@)param}" )
+            elems=( "${(P@)__param}" )
             elems=( "${(qq)elems[@]}" )
-            -zui_std_special_text "${elems[*]}" avalue
+            -zui_std_special_text "${elems[*]}" __avalue
         else
-            -zui_std_special_text "${(Pqq)param}" avalue
+            -zui_std_special_text "${(Pqq)__param}" __avalue
         fi
 
-        reply+=( "${aparam[1]}${(r:pdiff+1:: :)space} ${atype[1]}${(r:tdiff+1:: :)space} ${avalue[1]}" )
+        reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
     done
 
     # Non-selectable lines  Hops to jump with [ and ]   Local anchors
@@ -204,9 +225,9 @@ zbrowse_type_action() {
 
 
 allparams_generator_B() {
-    local mod="$1" ice="$2" arg="$3" param lparam tpe space=" "
-    local -a aparam atype avalue
-    integer pdiff tdiff
+    local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
+    local -a __aparam __atype __avalue
+    integer __pdiff __tdiff
 
     reply=( "${ZUI[MAGENTA]}## All parameters ##${ZUI[FMT_END]}" )
 
@@ -214,45 +235,45 @@ allparams_generator_B() {
         -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 2 1'
         # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
     else
-        for param in "${(k)parameters[@]}"; do
-            [[ "$param" = [?*\$#!@] ]] && continue
-            [[ -n "${all_black_list[(re)$param]}" ]] && continue
+        for __param in "${(k)parameters[@]}"; do
+            [[ "$__param" = [?*\$#!@] ]] && continue
+            [[ -n "${all_black_list[(re)$__param]}" ]] && continue
 
-            aparam=() atype=() avalue=() tpe="${(Pt)param}" pdiff=0 tdiff=0
+            __aparam=() __atype=() __avalue=() __tpe="${(Pt)__param}" __pdiff=0 __tdiff=0
 
-            lparam="$param"
-            (( ${#lparam} <= 25 )) && pdiff=$(( 25 - ${#lparam} )) || lparam="${lparam[1,22]}...";
-            (( ${#tpe} <= 25 )) && tdiff=$(( 25 - ${#tpe} )) || tpe="${tpe[1,22]}...";
+            __lparam="$__param"
+            (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
+            (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
-            -zui_std_button_ext "param_$param" "$mod" "$param" "" "" "${ZUI[GREEN]}${lparam}${ZUI[FMT_END]}" zbrowse_param_action aparam
-            -zui_std_button_ext "type_$param" "$mod" "$param" "" "" "${ZUI[YELLOW]}${tpe}${ZUI[FMT_END]}" zbrowse_type_action atype
+            -zui_std_button_ext "param_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" zbrowse_param_action __aparam
+            -zui_std_button_ext "type_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" zbrowse_type_action __atype
 
-            if [[ "${(Pt)param}" = *association* ]]; then
+            if [[ "${(Pt)__param}" = *association* ]]; then
                 local -a elems
                 local txt
-                elems=( "${(Pkv@)param}" )
+                elems=( "${(Pkv@)__param}" )
                 elems=( "${(@)elems[1,50]}" )
                 elems=( "${(qq)elems[@]}" )
                 txt="${elems[*]}"
                 txt="${txt[1,300]}"
-                -zui_std_special_text "$txt" avalue
-            elif [[ "${(Pt)param}" = *array* ]]; then
+                -zui_std_special_text "$txt" __avalue
+            elif [[ "${(Pt)__param}" = *array* ]]; then
                 local -a elems
                 local txt
-                elems=( "${(P@)param}" )
+                elems=( "${(P@)__param}" )
                 elems=( "${(@)elems[1,50]}" )
                 elems=( "${(qq)elems[@]}" )
                 txt="${elems[*]}"
                 txt="${txt[1,300]}"
-                -zui_std_special_text "$txt" avalue
+                -zui_std_special_text "$txt" __avalue
             else
                 local txt
-                txt="${(P)param}"
+                txt="${(P)__param}"
                 txt="${txt[1,300]}"
-                -zui_std_special_text "${(qq)txt}" avalue
+                -zui_std_special_text "${(qq)txt}" __avalue
             fi
 
-            reply+=( "${aparam[1]}${(r:pdiff+1:: :)space} ${atype[1]}${(r:tdiff+1:: :)space} ${avalue[1]}" )
+            reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
         done
     fi
 
