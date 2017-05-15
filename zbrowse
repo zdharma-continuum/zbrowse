@@ -63,6 +63,7 @@ all_black_list=(
     "__do_exit"
     "__prev_uniq_mode"
     "__jump_data"
+    "__end_idx"
 
     # ZUI2
     "zuiel_line_set"
@@ -93,7 +94,6 @@ all_black_list=(
     "MARK_END_CODES"
     "MARK2_CODES"
     "MARK2_END_CODES"
-    "end_idx"
 
     # autoload colors
     "fg"
