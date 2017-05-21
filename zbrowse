@@ -166,16 +166,27 @@ iparams_generator_A() {
 
         if [[ "${(Pt)__param}" = *association* ]]; then
             local -a elems
+            local txt
             elems=( "${(Pkv@)__param}" )
+            elems=( "${(@)elems[1,50]}" )
             elems=( "${(qq)elems[@]}" )
-            -zui_std_special_text "${elems[*]}" __avalue
+            txt="${elems[*]}"
+            txt="${txt[1,300]}"
+            -zui_std_special_text "$txt" __avalue
         elif [[ "${(Pt)__param}" = *array* ]]; then
             local -a elems
+            local txt
             elems=( "${(P@)__param}" )
+            elems=( "${(@)elems[1,50]}" )
             elems=( "${(qq)elems[@]}" )
-            -zui_std_special_text "${elems[*]}" __avalue
+            txt="${elems[*]}"
+            txt="${txt[1,300]}"
+            -zui_std_special_text "$txt" __avalue
         else
-            -zui_std_special_text "${(Pqq)__param}" __avalue
+            local txt
+            txt="${(P)__param}"
+            txt="${txt[1,300]}"
+            -zui_std_special_text "${(qq)txt}" __avalue
         fi
 
         reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
