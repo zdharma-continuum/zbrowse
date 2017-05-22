@@ -24,8 +24,9 @@ bindkey '^B' zbrowse
 
 zmodload zsh/parameter || { echo "No zsh/parameter module, zdharma/zbrowse not registering itself"; return 0 }
 
-# Holds defined parameters at preexec
-typeset -gH ZBROWSE_PARAMS_BEFORE
+# Holds 1) all defined parameters, 2) ZBROWSE_IPARAMS'
+# values, both at preexec. Keys are "types", "values"
+typeset -gAH ZBROWSE_BEFORE
 
 # Holds interactively defined parameters
 typeset -gaUH ZBROWSE_IPARAMS
@@ -65,7 +66,7 @@ ZBROWSE_BLACK_LIST=(
 
 # Ran before command
 __zbrowse_preexec() {
-    ZBROWSE_PARAMS_BEFORE="${(j: :)${(qkv)parameters[@]}}"
+    ZBROWSE_BEFORE[types]="${(j: :)${(qkv)parameters[@]}}"
 
     return 0
 }
@@ -74,16 +75,16 @@ __zbrowse_preexec() {
 __zbrowse_precmd() {
     builtin setopt localoptions extendedglob
 
-    local ZBROWSE_PARAMS_AFTER="${(j: :)${(qkv)parameters[@]}}"
+    local ZBROWSE_TYPES_AFTER="${(j: :)${(qkv)parameters[@]}}"
 
     # Paranoid defence against the parameters being only spaces
-    [[ "$ZBROWSE_PARAMS_BEFORE" != *[$'! \t']* || "$ZBROWSE_PARAMS_AFTER" != *[$'! \t']* ]] && return 0
+    [[ "${ZBROWSE_BEFORE[types]}" != *[$'! \t']* || "$ZBROWSE_TYPES_AFTER" != *[$'! \t']* ]] && return 0
 
     # De-concatenated parameters
     local -A params_before params_after
-    params_before=( "${(z)ZBROWSE_PARAMS_BEFORE}" )
-    params_after=( "${(z)ZBROWSE_PARAMS_AFTER}" )
-    ZBROWSE_PARAMS_BEFORE=""
+    params_before=( "${(z)ZBROWSE_BEFORE[types]}" )
+    params_after=( "${(z)ZBROWSE_TYPES_AFTER}" )
+    ZBROWSE_BEFORE[types]=""
 
     # The parameters that changed, with save of what
     # parameter was when diff started or when diff ended
