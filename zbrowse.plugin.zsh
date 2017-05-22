@@ -8,6 +8,8 @@
 ZERO="${(%):-%N}" # this gives immunity to functionargzero being unset
 ZBROWSE_REPO_DIR="${ZERO%/*}"
 
+[[ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" ]] && command mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse"
+
 #
 # Update FPATH if:
 # 1. Not loading with Zplugin
