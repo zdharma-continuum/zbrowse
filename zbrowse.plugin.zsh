@@ -69,6 +69,30 @@ ZBROWSE_BLACK_LIST=(
 # Ran before command
 __zbrowse_preexec() {
     ZBROWSE_BEFORE[types]="${(j: :)${(qkv)parameters[@]}}"
+    ZBROWSE_BEFORE[values]=""
+
+    local -a __elems
+    local __param __value_str __text __last
+    for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
+        if [[ "${(Pt)__param}" = *association* ]]; then
+            __elems=( "${(Pkv@)__param}" )
+            __last="${__elems[-1]}"
+            __elems=( "${(@)__elems[1,50]}" )
+            __text="${__elems[*]}"
+        elif [[ "${(Pt)__param}" = *array* ]]; then
+            __elems=( "${(P@)__param}" )
+            __last="${__elems[-1]}"
+            __elems=( "${(@)__elems[1,50]}" )
+            __text="${__elems[*]}"
+        else
+            __text="${(P)__param}"
+            __last="${__text[-10,-1]}"
+            __text="${__text[1,300]}"
+        fi
+        __value_str="$__text$__last"
+        # Matches hash dump-format - keys and values alternating
+        ZBROWSE_BEFORE[values]+="${(q)__param} ${(q)__value_str} "
+    done
 
     return 0
 }
@@ -125,6 +149,39 @@ __zbrowse_precmd() {
     # Serialize
     ZBROWSE_IPARAMS_PRE+="${(j: :)${(qkv)params_pre[@]}}"
     ZBROWSE_IPARAMS_POST+="${(j: :)${(qkv)params_post[@]}}"
+
+    local -A __before_values
+    if [[ -n "${ZBROWSE_BEFORE[values]}" ]]; then
+        __before_values=( "${(z)ZBROWSE_BEFORE[values]}" )
+        __before_values=( "${(Qkv)__before_values[@]}" )
+    fi
+
+    local data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse"
+    local -a __elems __all_elems
+    local __param __value_str __text __all_text __last
+    for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
+        if [[ "${(Pt)__param}" = *association* ]]; then
+            __all_elems=( "${(Pkv@)__param}" )
+            __last="${__all_elems[-1]}"
+            __elems=( "${(@)__all_elems[1,50]}" )
+            __all_elems=( "${(q@)__all_elems}" )
+            __text="${__elems[*]}"
+            [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "association ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
+        elif [[ "${(Pt)__param}" = *array* ]]; then
+            __all_elems=( "${(P@)__param}" )
+            __last="${__all_elems[-1]}"
+            __elems=( "${(@)__all_elems[1,50]}" )
+            __all_elems=( "${(q@)__all_elems}" )
+            __text="${__elems[*]}"
+            [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "array ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
+        else
+            __all_text="${(P)__param}"
+            __last="${__all_text[-10,-1]}"
+            __text="${__all_text[1,300]}"
+            __all_text="${(q)__all_text}"
+            [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "scalar ${(q)__param} ${__all_text}" >>! "$data_dir"/param.log
+        fi
+    done
 }
 
 autoload -Uz add-zsh-hook
