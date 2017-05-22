@@ -240,6 +240,7 @@ paramhist_generator_B() {
     integer __pdiff __tdiff
     local -a __log __splitted __aparam __atype __avalue
     [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
+    __log=( "${(Oa)__log[@]}" )
 
 
     reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}")
