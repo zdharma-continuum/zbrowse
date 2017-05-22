@@ -239,7 +239,7 @@ paramhist_generator_B() {
     local __data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" __line __param __lparam __tpe __space=" "
     integer __pdiff __tdiff
     local -a __log __splitted __aparam __atype __avalue
-    __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
+    [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
 
 
     reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}")
