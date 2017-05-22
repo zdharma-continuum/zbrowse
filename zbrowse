@@ -234,8 +234,38 @@ zbrowse_type_action() {
     logs+=( "|||Showed type of: |$data2" )
 }
 
+paramhist_generator_B() {
+    local __mod="$1" __ice="$2" __arg="$3"
+    local __data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" __line __param __lparam __tpe __space=" "
+    integer __pdiff __tdiff
+    local -a __log __splitted __aparam __atype __avalue
+    __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
 
-allparams_generator_B() {
+
+    reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}")
+
+    for __line in $__log; do
+        __aparam=() __atype=() __avalue=() __pdiff=0 __tdiff=0
+        __splitted=( "${(@z)__line}" )
+        __tpe="${__splitted[1]}"
+        __param="${__splitted[2]}"
+
+        __lparam="$__param"
+        (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
+        (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
+
+        -zui_std_button_ext "hparam_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" "" __aparam
+        -zui_std_button_ext "htype_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" "" __atype
+        -zui_std_special_text "${(j::)__splitted[3,-1]}" __avalue
+
+        reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
+    done
+
+    # Non-selectable lines  Hops to jump with [ and ]   Local anchors
+    reply2=( 1 )            reply3=( 1 )                reply4=( )
+}
+
+allparams_generator_C() {
     local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
     local -a __aparam __atype __avalue
     integer __pdiff __tdiff
@@ -298,7 +328,7 @@ allparams_generator_B() {
 }
 
 ## Start application ##
-zui-event-loop 1:iparams_generator_A 1:allparams_generator_B
+zui-event-loop 1:iparams_generator_A 1:paramhist_generator_B 1:allparams_generator_C
 
 -zui_std_cleanup serialize
 
