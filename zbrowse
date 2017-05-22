@@ -257,7 +257,7 @@ paramhist_generator_B() {
 
         -zui_std_button_ext "hparam_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" "" __aparam
         -zui_std_button_ext "htype_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" "" __atype
-        -zui_std_special_text "${(j::)__splitted[3,-1]}" __avalue
+        -zui_std_special_text "${(j: :)__splitted[3,-1]}" __avalue
 
         reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
     done

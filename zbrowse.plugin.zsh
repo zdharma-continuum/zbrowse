@@ -148,7 +148,7 @@ __zbrowse_precmd() {
             __all_elems=( "${(Pkv@)__param}" )
             __last="${__all_elems[-1]}"
             __elems=( "${(@)__all_elems[1,50]}" )
-            __all_elems=( "${(q@)__all_elems}" )
+            __all_elems=( "${(qq@)__all_elems}" )
             __text="${__elems[*]}"
             [[ -z "$__text" ]] && continue
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "association ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
@@ -156,7 +156,7 @@ __zbrowse_precmd() {
             __all_elems=( "${(P@)__param}" )
             __last="${__all_elems[-1]}"
             __elems=( "${(@)__all_elems[1,50]}" )
-            __all_elems=( "${(q@)__all_elems}" )
+            __all_elems=( "${(qq@)__all_elems}" )
             __text="${__elems[*]}"
             [[ -z "$__text" ]] && continue
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "array ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
@@ -164,7 +164,7 @@ __zbrowse_precmd() {
             __all_text="${(P)__param}"
             __last="${__all_text[-10,-1]}"
             __text="${__all_text[1,300]}"
-            __all_text="${(q)__all_text}"
+            __all_text="${(qq)__all_text}"
             [[ -z "$__text" ]] && continue
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "scalar ${(q)__param} ${__all_text}" >>! "$data_dir"/param.log
         fi
