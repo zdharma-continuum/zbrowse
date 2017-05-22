@@ -61,6 +61,9 @@ ZBROWSE_BLACK_LIST=(
     zcurses_colors
     ZCURSES_COLORS
     ZCURSES_COLOR_PAIRS
+
+    _ZSH_HIGHLIGHT_PRIOR_CURSOR
+    _ZSH_HIGHLIGHT_PRIOR_BUFFER
 )
 
 # Ran before command
