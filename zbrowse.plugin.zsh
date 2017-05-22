@@ -36,9 +36,6 @@ typeset -gaUH ZBROWSE_IPARAMS
 # Holds parameters that changed recently, order matters
 typeset -gaUH ZBROWSE_CHANGED_IPARAMS
 
-# Holds types of parameters before change
-typeset -gH ZBROWSE_IPARAMS_PRE
-
 # Holds types of parameters after change
 typeset -gH ZBROWSE_IPARAMS_POST
 
@@ -112,12 +109,6 @@ __zbrowse_precmd() {
     params_after=( "${(z)ZBROWSE_TYPES_AFTER}" )
     ZBROWSE_BEFORE[types]=""
 
-    # The parameters that changed, with save of what
-    # parameter was when diff started or when diff ended
-    typeset -A params_pre params_post
-    params_pre=( )
-    params_post=( )
-
     # Iterate through all existing keys, before or after diff,
     # i.e. after all variables that were somehow live across
     # the diffing process
@@ -135,20 +126,8 @@ __zbrowse_precmd() {
             ZBROWSE_CHANGED_IPARAMS[1,0]=( "$key" )
         elif [[ "${params_after[$key]}" != "${params_before[$key]}" ]]; then
             ZBROWSE_CHANGED_IPARAMS[1,0]=( "$key" )
-            # Empty for a new param, a type otherwise
-            [[ -z "${params_before[$key]}" ]] && params_before[$key]="\"\""
-            params_pre[$key]="${params_before[$key]}"
-
-            # Current type, can also be empty, when plugin
-            # unsets a parameter
-            [[ -z "${params_after[$key]}" ]] && params_after[$key]="\"\""
-            params_post[$key]="${params_after[$key]}"
         fi
     done
-
-    # Serialize
-    ZBROWSE_IPARAMS_PRE+="${(j: :)${(qkv)params_pre[@]}}"
-    ZBROWSE_IPARAMS_POST+="${(j: :)${(qkv)params_post[@]}}"
 
     local -A __before_values
     if [[ -n "${ZBROWSE_BEFORE[values]}" ]]; then
