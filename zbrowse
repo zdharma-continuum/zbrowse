@@ -274,7 +274,7 @@ allparams_generator_C() {
     reply=( "${ZUI[MAGENTA]}## All parameters ##${ZUI[FMT_END]}" )
 
     if (( show_all == 0 )); then
-        -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 2 1'
+        -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 3 1'
         # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
     else
         for __param in "${(k)parameters[@]}"; do
