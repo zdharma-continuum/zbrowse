@@ -21,7 +21,8 @@ emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal
 
 local internal      # trick variable to make a handler no-restart
 integer show_all=0  # whether to show the all-parameters module unwinded
-local -a logs   # own logs queue
+local -a logs       # own logs queue
+local -a values     # values, to perform restoration
 
 local -a all_black_list
 all_black_list=(
@@ -238,15 +239,19 @@ paramhist_generator_B() {
     local __mod="$1" __ice="$2" __arg="$3"
     local __data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" __line __param __lparam __tpe __space=" "
     integer __pdiff __tdiff
-    local -a __log __splitted __aparam __atype __avalue
+    local -a __log __splitted __aparam __atype __avalue __aset
     [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
     __log=( "${(Oa)__log[@]}" )
 
 
     reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}")
 
+    integer index=0
+
     for __line in $__log; do
-        __aparam=() __atype=() __avalue=() __pdiff=0 __tdiff=0
+        (( ++ index ))
+
+        __aparam=() __atype=() __avalue=() __aset=() __pdiff=0 __tdiff=0
         __splitted=( "${(@z)__line}" )
         __tpe="${__splitted[1]}"
         __param="${__splitted[2]}"
@@ -255,15 +260,35 @@ paramhist_generator_B() {
         (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
         (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
-        -zui_std_button_ext "hparam_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" "" __aparam
-        -zui_std_button_ext "htype_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" "" __atype
+        # Store the value for set-action
+        values[index]="${(j: :)__splitted[3,-1]}"
+
+        -zui_std_rc_button_ext "set_${index}" "$__mod" "$__param" "$__tpe" "$index" "${ZUI[YELLOW]}Set${ZUI[FMT_END]}" zbrowse_set_action __aset
+        -zui_std_special_text "${ZUI[CYAN]}${__lparam}${ZUI[FMT_END]}" __aparam
+        -zui_std_special_text "${ZUI[RED]}${__tpe}${ZUI[FMT_END]}" __atype
         -zui_std_special_text "${${(j: :)__splitted[3,-1]}[1,300]}" __avalue
 
-        reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
+        reply+=( "${__aset[1]}  ${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
     done
 
     # Non-selectable lines  Hops to jump with [ and ]   Local anchors
     reply2=( 1 )            reply3=( 1 )                reply4=( )
+}
+
+zbrowse_set_action() {
+    local id="$1" mod="$2" param="$3" tpe="$4" index="$5"
+
+    case $tpe in
+        array)
+            -zui_std_to_cmd_line "typeset -ga $param; ${param}=( ${values[index]} )"
+            ;;
+        association)
+            -zui_std_to_cmd_line "typeset -gA $param; ${param}=( ${values[index]} )"
+            ;;
+        *)
+            -zui_std_to_cmd_line "typeset -g $param; ${param}=${values[index]}"
+            ;;
+    esac
 }
 
 allparams_generator_C() {
