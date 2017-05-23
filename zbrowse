@@ -197,7 +197,7 @@ iparams_generator_A() {
 }
 
 zbrowse_param_action() {
-    local id="$1" mod="$2" data2="$3" data3="$4" data4="$4"
+    local id="$1" mod="$2" data2="$3" data3="$4" data4="$5"
     local tmp
 
     if zle; then
@@ -216,7 +216,7 @@ zbrowse_param_action() {
 }
 
 zbrowse_type_action() {
-    local id="$1" mod="$2" data2="$3" data3="$4" data4="$4"
+    local id="$1" mod="$2" data2="$3" data3="$4" data4="$5"
     local tmp
 
     if zle; then
