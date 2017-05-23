@@ -280,13 +280,13 @@ zbrowse_set_action() {
 
     case $tpe in
         array)
-            -zui_std_to_cmd_line "typeset -ga $param; ${param}=( ${values[index]} )"
+            -zui_util_to_cmd_line "typeset -ga $param; ${param}=( ${values[index]} )"
             ;;
         association)
-            -zui_std_to_cmd_line "typeset -gA $param; ${param}=( ${values[index]} )"
+            -zui_util_to_cmd_line "typeset -gA $param; ${param}=( ${values[index]} )"
             ;;
         *)
-            -zui_std_to_cmd_line "typeset -g $param; ${param}=${values[index]}"
+            -zui_util_to_cmd_line "typeset -g $param; ${param}=${values[index]}"
             ;;
     esac
 }
