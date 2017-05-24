@@ -142,7 +142,7 @@ __zbrowse_precmd() {
     fi
 
     local __size_limit
-    zstyle -s ':plugin:zbrowse' hist-size __size_limit || __size_limit="2048"
+    zstyle -s ':plugin:zbrowse' var-size-limit __size_limit || __size_limit="2048"
 
     local data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse"
     local -a __elems __all_elems
