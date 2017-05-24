@@ -265,7 +265,7 @@ paramhist_generator_B() {
         __param="${__splitted[2]}"
         __splitted=( "${(Q@)__splitted[3,-1]}" )
         __all_value=( "${(qq)__splitted[@]}" )
-        __splitted=( "${__all_value[@]/$'\n'/\\n}" )
+        __splitted=( "${__all_value[@]//$'\n'/\\n}" )
 
         __lparam="$__param"
         (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
