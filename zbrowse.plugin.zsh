@@ -74,7 +74,7 @@ __zbrowse_preexec() {
     ZBROWSE_BEFORE[values]=""
 
     local -a __elems
-    local __param __value_str __text __last
+    local __param __param2 __value_str __text __last
     for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
         if [[ "${(Pt)__param}" = *association* ]]; then
             __elems=( "${(Pkv@)__param}" )
@@ -82,9 +82,10 @@ __zbrowse_preexec() {
             __elems=( "${(@)__elems[1,50]}" )
             __text="${__elems[*]}"
         elif [[ "${(Pt)__param}" = *array* ]]; then
-            __elems=( "${(P@)__param}" )
-            __last="${__elems[-1]}"
-            __elems=( "${(@)__elems[1,50]}" )
+            __param2="${__param}[-1]"
+            __last="${(P)__param2}"
+            __param2="${__param}[1,50]"
+            __elems=( "${(@P)__param2}" )
             __text="${__elems[*]}"
         else
             __text="${(P)__param}"
