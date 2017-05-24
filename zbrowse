@@ -243,8 +243,16 @@ paramhist_generator_B() {
     [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
     __log=( "${(Oa)__log[@]}" )
 
+    # Variables of the text field
+    (( ${+ZUI[my_lmt_width]} == 0 )) && ZUI[my_lmt_width]=7
+    (( ${+ZUI[my_lmt_start]} == 0 )) && ZUI[my_lmt_start]=1
+    (( ${+ZUI[my_lmt_data]} == 0 )) && ZUI[my_lmt_data]="10"
 
-    reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}")
+    noglob -zui_std_text_field "lmt_$mod" ZUI[my_lmt_width] ZUI[my_lmt_start] ZUI[my_lmt_data] "" "" "" '-zui_std_fly_mod_regen 2 1' __avalue
+
+    reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}"
+            "Show |${__avalue[1]}| history entries:"
+    )
 
     integer index=0
 
@@ -269,6 +277,8 @@ paramhist_generator_B() {
         -zui_std_special_text "${${(j: :)__splitted[3,-1]}[1,300]}" __avalue
 
         reply+=( "${__aset[1]}  ${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
+
+        (( index >= ZUI[my_lmt_data] )) && break
     done
 
     # Non-selectable lines  Hops to jump with [ and ]   Local anchors
