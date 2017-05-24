@@ -140,28 +140,44 @@ __zbrowse_precmd() {
         __before_values=( "${(Qkv)__before_values[@]}" )
     fi
 
+    local __size_limit=2048
+    zstyle -s ':plugin:zbrowse' hist-size __size_limit
+
     local data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse"
     local -a __elems __all_elems
     local __param __value_str __text __all_text __last
     for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
         if [[ "${(Pt)__param}" = *association* ]]; then
             __all_elems=( "${(Pkv@)__param}" )
+            __all_text="${(j::)__all_elems}"
             __last="${__all_elems[-1]}"
+
             __elems=( "${(@)__all_elems[1,50]}" )
-            __all_elems=( "${(qq@)__all_elems}" )
             __text="${__elems[*]}"
+            __all_elems=( "${(qq@)__all_elems}" )
+
             [[ -z "$__text" ]] && continue
+            [[ "${#__all_text}" -gt "$__size_limit" ]] && continue
+
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "association ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
         elif [[ "${(Pt)__param}" = *array* ]]; then
             __all_elems=( "${(P@)__param}" )
+            __all_text="${(j::)__all_elems}"
             __last="${__all_elems[-1]}"
+
             __elems=( "${(@)__all_elems[1,50]}" )
-            __all_elems=( "${(qq@)__all_elems}" )
             __text="${__elems[*]}"
+            __all_elems=( "${(qq@)__all_elems}" )
+
             [[ -z "$__text" ]] && continue
+            [[ "${#__all_text}" -gt "$__size_limit" ]] && continue
+
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "array ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
         else
             __all_text="${(P)__param}"
+
+            [[ "${#__all_text}" -gt "$__size_limit" ]] && continue
+
             __last="${__all_text[-10,-1]}"
             __text="${__all_text[1,300]}"
             __all_text="${(qq)__all_text}"
