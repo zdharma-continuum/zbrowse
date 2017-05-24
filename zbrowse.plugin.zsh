@@ -155,7 +155,7 @@ __zbrowse_precmd() {
 
             __elems=( "${(@)__all_elems[1,50]}" )
             __text="${__elems[*]}"
-            __all_elems=( "${(qq@)__all_elems}" )
+            __all_elems=( "${(qqqq@)__all_elems}" )
 
             [[ -z "$__text" ]] && continue
             [[ "${#__all_text}" -gt "$__size_limit" ]] && continue
@@ -173,7 +173,7 @@ __zbrowse_precmd() {
             [[ "${#__all_text}" -gt "$__size_limit" ]] && continue
 
             __all_elems=( "${(P@)__param}" )
-            __all_elems=( "${(qq@)__all_elems}" )
+            __all_elems=( "${(qqqq@)__all_elems}" )
 
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "array ${(q)__param} ${__all_elems[*]}" >>! "$data_dir"/param.log
         else
@@ -183,7 +183,7 @@ __zbrowse_precmd() {
 
             __last="${__all_text[-10,-1]}"
             __text="${__all_text[1,300]}"
-            __all_text="${(qq)__all_text}"
+            __all_text="${(qqqq)__all_text}"
             [[ -z "$__text" ]] && continue
             [[ "$__text$__last" != "${__before_values[$__param]}" ]] && print -r -- "scalar ${(q)__param} ${__all_text}" >>! "$data_dir"/param.log
         fi

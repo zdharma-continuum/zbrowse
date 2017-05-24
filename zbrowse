@@ -239,7 +239,7 @@ paramhist_generator_B() {
     local __mod="$1" __ice="$2" __arg="$3"
     local __data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" __line __param __lparam __tpe __space=" "
     integer __pdiff __tdiff
-    local -a __log __splitted __aparam __atype __avalue __aset
+    local -a __log __splitted __all_value __aparam __atype __avalue __aset
     [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
     __log=( "${(Oa)__log[@]}" )
 
@@ -263,18 +263,21 @@ paramhist_generator_B() {
         __splitted=( "${(@z)__line}" )
         __tpe="${__splitted[1]}"
         __param="${__splitted[2]}"
+        __splitted=( "${(Q@)__splitted[3,-1]}" )
+        __all_value=( "${(qq)__splitted[@]}" )
+        __splitted=( "${__all_value[@]/$'\n'/\\n}" )
 
         __lparam="$__param"
         (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
         (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
         # Store the value for set-action
-        values[index]="${(j: :)__splitted[3,-1]}"
+        values[index]="${(j: :)__all_value}"
 
         -zui_std_rc_button_ext "set_${index}" "$__mod" "$__param" "$__tpe" "$index" "${ZUI[YELLOW]}Set${ZUI[FMT_END]}" zbrowse_set_action __aset
         -zui_std_special_text "${ZUI[CYAN]}${__lparam}${ZUI[FMT_END]}" __aparam
         -zui_std_special_text "${ZUI[RED]}${__tpe}${ZUI[FMT_END]}" __atype
-        -zui_std_special_text "${${(j: :)__splitted[3,-1]}[1,300]}" __avalue
+        -zui_std_special_text "${${(j: :)__splitted}[1,300]}" __avalue
 
         reply+=( "${__aset[1]}  ${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
 
