@@ -8,9 +8,9 @@ variable browser:
 
 ![ZBrowse](https://github.com/zdharma/zbrowse/blob/master/images/zbrowse.png)
 
-(you can resize the video like web page)
+(you can resize the video like any web page)
 
-[![asciicast](https://asciinema.org/a/120239.png)](https://asciinema.org/a/120239)
+[![asciicast](https://asciinema.org/a/122018.png)](https://asciinema.org/a/122018)
 
 ## Installation
 
