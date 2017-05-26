@@ -118,20 +118,20 @@ __zbrowse_precmd() {
     # Iterate through all existing keys, before or after diff,
     # i.e. after all variables that were somehow live across
     # the diffing process
-    local key
-    typeset -aU keys
-    keys=( "${(k)params_after[@]}" "${(k)params_before[@]}" );
-    for key in "${keys[@]}"; do
-        key="${(Q)key}"
+    local __key
+    typeset -aU __keys
+    __keys=( "${(k)params_after[@]}" "${(k)params_before[@]}" );
+    for __key in "${__keys[@]}"; do
+        __key="${(Q)__key}"
 
         # Checks if given parameter is from black-list
-        [[ -n "${ZBROWSE_BLACK_LIST[(er)$key]}" ]] && continue
+        [[ -n "${ZBROWSE_BLACK_LIST[(er)$__key]}" ]] && continue
 
-        if [[ -z "${params_before[$key]}" ]]; then
-            ZBROWSE_IPARAMS+=( "$key" )
-            ZBROWSE_CHANGED_IPARAMS[1,0]=( "$key" )
-        elif [[ "${params_after[$key]}" != "${params_before[$key]}" ]]; then
-            ZBROWSE_CHANGED_IPARAMS[1,0]=( "$key" )
+        if [[ -z "${params_before[$__key]}" ]]; then
+            ZBROWSE_IPARAMS+=( "$__key" )
+            ZBROWSE_CHANGED_IPARAMS[1,0]=( "$__key" )
+        elif [[ "${params_after[$__key]}" != "${params_before[$__key]}" ]]; then
+            ZBROWSE_CHANGED_IPARAMS[1,0]=( "$__key" )
         fi
     done
 
