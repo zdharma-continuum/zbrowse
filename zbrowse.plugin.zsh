@@ -125,7 +125,7 @@ __zbrowse_precmd() {
         __key="${(Q)__key}"
 
         # Checks if given parameter is from black-list
-        [[ -n "${ZBROWSE_BLACK_LIST[(er)$__key]}" ]] && continue
+        [[ -n "${ZBROWSE_BLACK_LIST[(er)$__key]}" || "${(Pt)__key}" = *special* ]] && continue
 
         if [[ -z "${params_before[$__key]}" ]]; then
             ZBROWSE_IPARAMS+=( "$__key" )
