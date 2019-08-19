@@ -315,7 +315,7 @@ allparams_generator_C() {
         -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 3 1'
         # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
     else
-        for __param in "${(k)parameters[@]}"; do
+        for __param in "${(iok)parameters[@]}"; do
             [[ "$__param" = [?*\$#!@] ]] && continue
             [[ -n "${all_black_list[(re)$__param]}" ]] && continue
 
