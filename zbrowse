@@ -95,6 +95,7 @@ all_black_list=(
     "MARK_END_CODES"
     "MARK2_CODES"
     "MARK2_END_CODES"
+    "RESET"
 
     # autoload colors
     "fg"
@@ -128,6 +129,27 @@ all_black_list=(
     "BLACK"
     "DEFAULT"
 
+    # ZUI6
+    ZUILIST_ACTIVE_SEGMENTS
+    ZUILIST_HOP_INDICES
+    ZUILIST_NONSELECTABLE_ELEMENTS
+    ZUILIST_WRAPPER_BIT
+    ZUILIST_WRAPPER_LINE
+    zui_log_colors
+    ZUI_MESSAGES
+    ZUI_PB_LEFT
+    ZUI_PB_RIGHT
+    ZUI_PB_SELECTED_WORD
+    ZUI_PB_SPACES
+    ZUI_PB_WORDS
+    ZUI_PB_WORDS_BEGINNINGS
+    ZUI_PB_
+    ZUIEL_LINE_COUNT
+    ZUIEL_OUTPUT
+    zuiel_spacing
+    zuiel_prev_spacing
+    _zui_wrapper_has_terminfo
+
     # Generator B
     __mod
     __ice
@@ -141,6 +163,90 @@ all_black_list=(
     __avalue
     __pdiff
     __tdiff
+
+    mod1_ice1_global_index
+    mod1_ice1_hops
+    mod1_ice1_lanchors
+    mod1_ice1_nonselectables
+    mod1_ice1_output
+    mod1_ice1_size
+    mod1_ice1_spacing
+
+    mod2_ice1_global_index
+    mod2_ice1_hops
+    mod2_ice1_lanchors
+    mod2_ice1_nonselectables
+    mod2_ice1_output
+    mod2_ice1_size
+    mod2_ice1_spacing
+
+    mod3_ice1_global_index
+    mod3_ice1_hops
+    mod3_ice1_lanchors
+    mod3_ice1_nonselectables
+    mod3_ice1_output
+    mod3_ice1_size
+    mod3_ice1_spacing
+
+    prev_mod1_ice1_hops
+    prev_mod1_ice1_nonselectables
+    prev_mod1_ice1_size
+    prev_mod1_ice1_spacing
+
+    prev_mod2_ice1_hops
+    prev_mod2_ice1_nonselectables
+    prev_mod2_ice1_size
+    prev_mod2_ice1_spacing
+
+    prev_mod3_ice1_hops
+    prev_mod3_ice1_nonselectables
+    prev_mod3_ice1_size
+    prev_mod3_ice1_spacing
+
+    values
+    retval
+    var_name
+    mod
+    wrk_bld
+    wrk_stbld
+    ice
+    zel_mod
+    zel_ice
+    generation_time
+    generator
+    tpe
+    txt
+    update
+    id
+    internal
+    key
+    REGENERATE
+    REGENERATE_ALWAYS
+    REGENERATE_ARG
+    REPLY
+    reply
+    reply2
+    reply3
+    reply4
+    reply5
+    selectable
+    show_all
+    status_msg_strlen
+
+    search_buffer
+    search_pattern
+
+    argv
+    BUFFER
+    PREBUFFER
+    LBUFFER
+    RBUFFER
+    BUFFERLINES
+    CURSOR
+    PREDISPLAY
+    match mbegin mend
+    MATCH MBEGIN MEND
+
 )
 
 # Welcoming message
