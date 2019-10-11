@@ -247,6 +247,17 @@ all_black_list=(
     match mbegin mend
     MATCH MBEGIN MEND
 
+    backuptheme
+    BOLD
+    orig_buffer
+    original_widget_name
+    orig_postdisplay
+    restore
+    stbackuptheme
+    term_height
+    term_width
+    wrk_bold
+    wrk_stbold
 )
 
 # Welcoming message
