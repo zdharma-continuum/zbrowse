@@ -247,6 +247,9 @@ all_black_list=(
     match mbegin mend
     MATCH MBEGIN MEND
 
+    col
+    close
+    colsearch_pattern
     backuptheme
     BOLD
     orig_buffer
