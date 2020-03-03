@@ -12,13 +12,14 @@ ZBROWSE_REPO_DIR="${ZERO%/*}"
 
 #
 # Update FPATH if:
-# 1. Not loading with Zplugin
-# 2. Not having fpath already updated (that would equal: using other plugin manager)
+# 1. Not loading with Zplugin or other standard-compliant p-m
+#    (see: http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
+# 2. Not having fpath already updated (that is being done by other p-ms).
 #
 
-if [[ -z "$ZPLG_CUR_PLUGIN" && "${fpath[(r)$ZBROWSE_REPO_DIR]}" != $ZBROWSE_REPO_DIR ]]; then
-    fpath+=( "$ZBROWSE_REPO_DIR" )
-fi
+if [[ ${zsh_loaded_plugins[-1]} != */zbrowse && -z ${fpath[(r)${0:h}(|/)]} ]] {
+    fpath+=( "${0:h}" )
+}
 
 autoload zbrowse
 zle -N zbrowse
