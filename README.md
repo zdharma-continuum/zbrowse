@@ -2,8 +2,8 @@
 
 # ZBrowse
 
-When doing a shell work, it is often the case that `echo $variable` is invoked multiple times,
-to check result of a loop, etc. Now, just pressing `Ctrl-B` is needed, with `ZBrowse` – `Zshell`
+When doing shell work, it is often the case that `echo $variable` is invoked multiple times,
+to check result of a loop, etc. With ZBrowse, you just need to press `Ctrl-B`, which invokes the `ZBrowse` – `Zshell`
 variable browser:
 
 ![ZBrowse](https://github.com/zdharma/zbrowse/blob/master/images/zbrowse.png)
@@ -14,7 +14,7 @@ variable browser:
 
 ## Installation
 
-First install [ZUI](https://github.com/zdharma/zui) plugin (it's an UI library).
+First install the [ZUI](https://github.com/zdharma/zui) plugin (it's an UI library).
 
 **The plugin is "standalone"**, which means that only sourcing it is needed. So to
 install, unpack `zbrowse` somewhere and add
@@ -33,7 +33,7 @@ other too, and also install with `Oh My Zsh` (by copying directory to
 
 Add `zplugin load zdharma/zbrowse` to your `.zshrc` file. Zplugin will handle
 cloning the plugin for you automatically the next time you start zsh. To update
-issue `zplugin update zdharma/zbrowse` (`update-all` can also be used).
+run `zplugin update zdharma/zbrowse` (`update-all` can also be used).
 
 ### Antigen
 
@@ -49,4 +49,4 @@ cloning the plugin for you automatically the next time you start zsh.
 ### Zgen
 
 Add `zgen load zdharma/zbrowse` to your .zshrc file in the same place you're doing
-your other `zgen load` calls in.
+your other `zgen load` calls.
