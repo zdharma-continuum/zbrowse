@@ -5,8 +5,9 @@
 # to ~/.zshrc.
 #
 
-ZERO="${(%):-%N}" # this gives immunity to functionargzero being unset
-ZBROWSE_REPO_DIR="${ZERO%/*}"
+0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+ZBROWSE_REPO_DIR="${0:h}"
 
 [[ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" ]] && command mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse"
 
