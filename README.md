@@ -6,7 +6,7 @@ When doing shell work, it is often the case that `echo $variable` is invoked mul
 to check result of a loop, etc. With ZBrowse, you just need to press `Ctrl-B`, which invokes the `ZBrowse` – `Zshell`
 variable browser:
 
-![ZBrowse](https://github.com/zdharma/zbrowse/blob/master/images/zbrowse.png)
+![ZBrowse](https://github.com/zdharma-continuum/zbrowse/blob/master/images/zbrowse.png)
 
 (you can resize the video like any web page)
 
@@ -31,22 +31,22 @@ other too, and also install with `Oh My Zsh` (by copying directory to
 
 ### [Zplugin](https://github.com/psprint/zplugin)
 
-Add `zplugin load zdharma/zbrowse` to your `.zshrc` file. Zplugin will handle
+Add `zplugin load zdharma-continuum/zbrowse` to your `.zshrc` file. Zplugin will handle
 cloning the plugin for you automatically the next time you start zsh. To update
 run `zplugin update zdharma/zbrowse` (`update-all` can also be used).
 
 ### Antigen
 
-Add `antigen bundle zdharma/zbrowse` to your `.zshrc` file. Antigen will handle
+Add `antigen bundle zdharma-continuum/zbrowse` to your `.zshrc` file. Antigen will handle
 cloning the plugin for you automatically the next time you start zsh.
 
 ### Oh-My-Zsh
 
 1. `cd ~/.oh-my-zsh/custom/plugins`
-2. `git clone git@github.com:zdharma/zbrowse.git`
+2. `git clone git@github.com:zdharma-continuum/zbrowse.git`
 3. Add `zbrowse` to your plugin list
 
-### Zgen
+### Zgenom / Zgen
 
-Add `zgen load zdharma/zbrowse` to your .zshrc file in the same place you're doing
+Add `zgen load zdharma-continuum/zbrowse` to your .zshrc file in the same place you're doing
 your other `zgen load` calls.
