@@ -14,7 +14,7 @@ ZBROWSE_REPO_DIR="${0:h}"
 #
 # Update FPATH if:
 # 1. Not loading with Zplugin or other standard-compliant p-m
-#    (see: http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
+#    (see: https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
 # 2. Not having fpath already updated (that is being done by other p-ms).
 #
 
