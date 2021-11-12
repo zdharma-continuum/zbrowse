@@ -1,6 +1,4 @@
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D6XDCHDSBDSDG)
-
-# ZBrowse
+# ZBrowse [![Gitter][gitter-image]][gitter-link]
 
 When doing shell work, it is often the case that `echo $variable` is invoked multiple times,
 to check result of a loop, etc. With ZBrowse, you just need to press `Ctrl-B`, which invokes the `ZBrowse` – `Zshell`
@@ -50,3 +48,6 @@ cloning the plugin for you automatically the next time you start zsh.
 
 Add `zgen load zdharma-continuum/zbrowse` to your .zshrc file in the same place you're doing
 your other `zgen load` calls.
+
+[gitter-image]: https://badges.gitter.im/zdharma-continuum/community.svg
+[gitter-link]: https://gitter.im/zdharma-continuum/community
