@@ -1,4 +1,4 @@
-# ZBrowse
+# ZBrowse [![Gitter][gitter-image]][gitter-link]
 
 When doing shell work, it is often the case that `echo $variable` is invoked
 multiple times, to check result of a loop, etc. With ZBrowse, you just need to
@@ -44,10 +44,13 @@ zsh.
 ### Oh-My-Zsh
 
 1. `cd ~/.oh-my-zsh/custom/plugins`
-1. `git clone git@github.com:zdharma-continuum/zbrowse.git`
-1. Add `zbrowse` to your plugin list
+2. `git clone git@github.com:zdharma-continuum/zbrowse.git`
+3. Add `zbrowse` to your plugin list
 
 ### Zgen
 
-Add `zgen load zdharma-continuum/zbrowse` to your .zshrc file in the same place
-you're doing your other `zgen load` calls.
+Add `zgen load zdharma-continuum/zbrowse` to your .zshrc file in the same place you're doing
+your other `zgen load` calls.
+
+[gitter-image]: https://badges.gitter.im/zdharma-continuum/community.svg
+[gitter-link]: https://gitter.im/zdharma-continuum/community
