@@ -6,7 +6,7 @@
 # all the time. Bound to Ctrl-B
 
 if [[ "${+functions[-zui_std_cleanup]}" = "0" ]]; then
-    echo "ZBrowse uses ZUI plugin, please load https://github.com/zdharma/zui/ with your plugin manager, or source it"
+    echo "ZBrowse uses ZUI plugin, please load https://github.com/zdharma-continuum/zui/ with your plugin manager, or source it"
     return 1
 fi
 

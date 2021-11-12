@@ -13,8 +13,8 @@ ZBROWSE_REPO_DIR="${0:h}"
 
 #
 # Update FPATH if:
-# 1. Not loading with Zplugin or other standard-compliant p-m
-#    (see: https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
+# 1. Not loading with zinit or other standard-compliant p-m
+#    (see: http://zdharma-continuum.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
 # 2. Not having fpath already updated (that is being done by other p-ms).
 #
 
@@ -26,7 +26,7 @@ autoload zbrowse
 zle -N zbrowse
 bindkey '^B' zbrowse
 
-zmodload zsh/parameter || { echo "No zsh/parameter module, zdharma/zbrowse not registering itself"; return 0 }
+zmodload zsh/parameter || { echo "No zsh/parameter module, zdharma-continuum/zbrowse not registering itself"; return 0 }
 
 # Holds 1) all defined parameters, 2) ZBROWSE_IPARAMS'
 # values, both at preexec. Keys are "types", "values"
