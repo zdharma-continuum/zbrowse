@@ -1,13 +1,19 @@
+#!/usr/bin/env zsh
+#
+# -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
+#
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
+
 # Started from Zle or from command line
 #
-# Allows to browse Zsh data structures, but it's main
-# use is to see all *interactively* defined parameters
-# (variables), so that you don't have to do echo $test
-# all the time. Bound to Ctrl-B
+# Allows to browse Zsh data structures, but it's main use is to see all
+# *interactively* defined parameters (variables), so that you don't have to do
+# echo $test all the time. Bound to Ctrl-B
 
 if [[ "${+functions[-zui_std_cleanup]}" = "0" ]]; then
-    echo "ZBrowse uses ZUI plugin, please load https://github.com/zdharma-continuum/zui/ with your plugin manager, or source it"
-    return 1
+  echo "ZBrowse uses ZUI plugin, please load https://github.com/zdharma-continuum/zui/ with your plugin manager, or source it"
+  return 1
 fi
 
 -zui_std_cleanup deserialize:"zui-demo-zbrowse"
@@ -26,471 +32,474 @@ local -a values     # values, to perform restoration
 
 local -a all_black_list
 all_black_list=(
-    # Zsh special
-    "functions"
-    "history"
-    "historywords"
-    "widgets"
+  # Zsh special
+  "functions"
+  "history"
+  "historywords"
+  "widgets"
 
-    # ZUI
-    "__list"
-    "__slist"
-    "__last_element"
-    "__selection"
-    "__action"
-    "__cursor_state"
-    "__wname_main"
-    "__wname_status"
-    "__status_height"
-    "__status_width"
-    "__page_height"
-    "__page_width"
-    "__main_height"
-    "__main_width"
-    "__prev_start_idx"
-    "__prev_search_buffer"
-    "__colormap2"
-    "__actv_text"
-    "__header"
-    "__current_difference"
-    "__last_element_difference"
-    "__tmp"
-    "__disp_list"
-    "__disp_list2"
-    "__segments"
-    "__final_key"
-    "__jump_id"
-    "__nseg"
-    "__do_exit"
-    "__prev_uniq_mode"
-    "__jump_data"
-    "__end_idx"
+  # ZUI
+  "__list"
+  "__slist"
+  "__last_element"
+  "__selection"
+  "__action"
+  "__cursor_state"
+  "__wname_main"
+  "__wname_status"
+  "__status_height"
+  "__status_width"
+  "__page_height"
+  "__page_width"
+  "__main_height"
+  "__main_width"
+  "__prev_start_idx"
+  "__prev_search_buffer"
+  "__colormap2"
+  "__actv_text"
+  "__header"
+  "__current_difference"
+  "__last_element_difference"
+  "__tmp"
+  "__disp_list"
+  "__disp_list2"
+  "__segments"
+  "__final_key"
+  "__jump_id"
+  "__nseg"
+  "__do_exit"
+  "__prev_uniq_mode"
+  "__jump_data"
+  "__end_idx"
 
-    # ZUI2
-    "zuiel_line_set"
-    "zuiel_lanchors"
-    "zuiel_size"
-    "zuiel_nonselectables"
-    "zuiel_prev_nonselectables"
-    "zuiel_bit_set"
-    "zuiel_module_hash"
-    "zuiel_val1"
-    "zuiel_val2"
-    "zuiel_val3"
-    "zuiel_var_name"
-    "zuiel_top_anchors"
-    "zuiel_regen_lanchors"
-    "zuiel_key"
-    "zuiel_prev_hops"
-    "zuiel_a"
-    "zuiel_output"
-    "zuiel_n"
-    "zuiel_start_seconds"
-    "zuiel_prev_size"
-    "zuiel_hops"
+  # ZUI2
+  "zuiel_line_set"
+  "zuiel_lanchors"
+  "zuiel_size"
+  "zuiel_nonselectables"
+  "zuiel_prev_nonselectables"
+  "zuiel_bit_set"
+  "zuiel_module_hash"
+  "zuiel_val1"
+  "zuiel_val2"
+  "zuiel_val3"
+  "zuiel_var_name"
+  "zuiel_top_anchors"
+  "zuiel_regen_lanchors"
+  "zuiel_key"
+  "zuiel_prev_hops"
+  "zuiel_a"
+  "zuiel_output"
+  "zuiel_n"
+  "zuiel_start_seconds"
+  "zuiel_prev_size"
+  "zuiel_hops"
 
-    # ZUI3
-    "MARK"
-    "MARK_CODES"
-    "MARK_END_CODES"
-    "MARK2_CODES"
-    "MARK2_END_CODES"
-    "RESET"
+  # ZUI3
+  "MARK"
+  "MARK_CODES"
+  "MARK_END_CODES"
+  "MARK2_CODES"
+  "MARK2_END_CODES"
+  "RESET"
 
-    # autoload colors
-    "fg"
-    "fg_bold"
-    "fg_no_bold"
-    "bg"
-    "bg_bold"
-    "bg_no_bold"
-    "bold_color"
-    "prompt_newline"
+  # autoload colors
+  "fg"
+  "fg_bold"
+  "fg_no_bold"
+  "bg"
+  "bg_bold"
+  "bg_no_bold"
+  "bold_color"
+  "prompt_newline"
 
-    # ZUI4
-    "BG_YELLOW"
-    "BG_GREEN"
-    "BG_CYAN"
-    "BG_MAGENTA"
-    "BG_WHITE"
-    "BG_BLUE"
-    "BG_RED"
-    "BG_BLACK"
-    "BG_DEFAULT"
+  # ZUI4
+  "BG_YELLOW"
+  "BG_GREEN"
+  "BG_CYAN"
+  "BG_MAGENTA"
+  "BG_WHITE"
+  "BG_BLUE"
+  "BG_RED"
+  "BG_BLACK"
+  "BG_DEFAULT"
 
-    # ZUI5
-    "YELLOW"
-    "GREEN"
-    "CYAN"
-    "MAGENTA"
-    "WHITE"
-    "BLUE"
-    "RED"
-    "BLACK"
-    "DEFAULT"
+  # ZUI5
+  "YELLOW"
+  "GREEN"
+  "CYAN"
+  "MAGENTA"
+  "WHITE"
+  "BLUE"
+  "RED"
+  "BLACK"
+  "DEFAULT"
 
-    # ZUI6
-    ZUILIST_ACTIVE_SEGMENTS
-    ZUILIST_HOP_INDICES
-    ZUILIST_NONSELECTABLE_ELEMENTS
-    ZUILIST_WRAPPER_BIT
-    ZUILIST_WRAPPER_LINE
-    zui_log_colors
-    ZUI_MESSAGES
-    ZUI_PB_LEFT
-    ZUI_PB_RIGHT
-    ZUI_PB_SELECTED_WORD
-    ZUI_PB_SPACES
-    ZUI_PB_WORDS
-    ZUI_PB_WORDS_BEGINNINGS
-    ZUI_PB_
-    ZUIEL_LINE_COUNT
-    ZUIEL_OUTPUT
-    zuiel_spacing
-    zuiel_prev_spacing
-    _zui_wrapper_has_terminfo
+  # ZUI6
+  ZUILIST_ACTIVE_SEGMENTS
+  ZUILIST_HOP_INDICES
+  ZUILIST_NONSELECTABLE_ELEMENTS
+  ZUILIST_WRAPPER_BIT
+  ZUILIST_WRAPPER_LINE
+  zui_log_colors
+  ZUI_MESSAGES
+  ZUI_PB_LEFT
+  ZUI_PB_RIGHT
+  ZUI_PB_SELECTED_WORD
+  ZUI_PB_SPACES
+  ZUI_PB_WORDS
+  ZUI_PB_WORDS_BEGINNINGS
+  ZUI_PB_
+  ZUIEL_LINE_COUNT
+  ZUIEL_OUTPUT
+  zuiel_spacing
+  zuiel_prev_spacing
+  _zui_wrapper_has_terminfo
 
-    # Generator B
-    __mod
-    __ice
-    __arg
-    __param
-    __lparam
-    __tpe
-    __space
-    __aparam
-    __atype
-    __avalue
-    __pdiff
-    __tdiff
+  # Generator B
+  __mod
+  __ice
+  __arg
+  __param
+  __lparam
+  __tpe
+  __space
+  __aparam
+  __atype
+  __avalue
+  __pdiff
+  __tdiff
 
-    mod1_ice1_global_index
-    mod1_ice1_hops
-    mod1_ice1_lanchors
-    mod1_ice1_nonselectables
-    mod1_ice1_output
-    mod1_ice1_size
-    mod1_ice1_spacing
+  mod1_ice1_global_index
+  mod1_ice1_hops
+  mod1_ice1_lanchors
+  mod1_ice1_nonselectables
+  mod1_ice1_output
+  mod1_ice1_size
+  mod1_ice1_spacing
 
-    mod2_ice1_global_index
-    mod2_ice1_hops
-    mod2_ice1_lanchors
-    mod2_ice1_nonselectables
-    mod2_ice1_output
-    mod2_ice1_size
-    mod2_ice1_spacing
+  mod2_ice1_global_index
+  mod2_ice1_hops
+  mod2_ice1_lanchors
+  mod2_ice1_nonselectables
+  mod2_ice1_output
+  mod2_ice1_size
+  mod2_ice1_spacing
 
-    mod3_ice1_global_index
-    mod3_ice1_hops
-    mod3_ice1_lanchors
-    mod3_ice1_nonselectables
-    mod3_ice1_output
-    mod3_ice1_size
-    mod3_ice1_spacing
+  mod3_ice1_global_index
+  mod3_ice1_hops
+  mod3_ice1_lanchors
+  mod3_ice1_nonselectables
+  mod3_ice1_output
+  mod3_ice1_size
+  mod3_ice1_spacing
 
-    prev_mod1_ice1_hops
-    prev_mod1_ice1_nonselectables
-    prev_mod1_ice1_size
-    prev_mod1_ice1_spacing
+  prev_mod1_ice1_hops
+  prev_mod1_ice1_nonselectables
+  prev_mod1_ice1_size
+  prev_mod1_ice1_spacing
 
-    prev_mod2_ice1_hops
-    prev_mod2_ice1_nonselectables
-    prev_mod2_ice1_size
-    prev_mod2_ice1_spacing
+  prev_mod2_ice1_hops
+  prev_mod2_ice1_nonselectables
+  prev_mod2_ice1_size
+  prev_mod2_ice1_spacing
 
-    prev_mod3_ice1_hops
-    prev_mod3_ice1_nonselectables
-    prev_mod3_ice1_size
-    prev_mod3_ice1_spacing
+  prev_mod3_ice1_hops
+  prev_mod3_ice1_nonselectables
+  prev_mod3_ice1_size
+  prev_mod3_ice1_spacing
 
-    values
-    retval
-    var_name
-    mod
-    wrk_bld
-    wrk_stbld
-    ice
-    zel_mod
-    zel_ice
-    generation_time
-    generator
-    tpe
-    txt
-    update
-    id
-    internal
-    key
-    REGENERATE
-    REGENERATE_ALWAYS
-    REGENERATE_ARG
-    REPLY
-    reply
-    reply2
-    reply3
-    reply4
-    reply5
-    selectable
-    show_all
-    status_msg_strlen
+  values
+  retval
+  var_name
+  mod
+  wrk_bld
+  wrk_stbld
+  ice
+  zel_mod
+  zel_ice
+  generation_time
+  generator
+  tpe
+  txt
+  update
+  id
+  internal
+  key
+  REGENERATE
+  REGENERATE_ALWAYS
+  REGENERATE_ARG
+  REPLY
+  reply
+  reply2
+  reply3
+  reply4
+  reply5
+  selectable
+  show_all
+  status_msg_strlen
 
-    search_buffer
-    search_pattern
+  search_buffer
+  search_pattern
 
-    argv
-    BUFFER
-    PREBUFFER
-    LBUFFER
-    RBUFFER
-    BUFFERLINES
-    CURSOR
-    PREDISPLAY
-    match mbegin mend
-    MATCH MBEGIN MEND
+  argv
+  BUFFER
+  PREBUFFER
+  LBUFFER
+  RBUFFER
+  BUFFERLINES
+  CURSOR
+  PREDISPLAY
+  match mbegin mend
+  MATCH MBEGIN MEND
 
-    col
-    close
-    colsearch_pattern
-    backuptheme
-    BOLD
-    orig_buffer
-    original_widget_name
-    orig_postdisplay
-    restore
-    stbackuptheme
-    term_height
-    term_width
-    wrk_bold
-    wrk_stbold
+  col
+  close
+  colsearch_pattern
+  backuptheme
+  BOLD
+  orig_buffer
+  original_widget_name
+  orig_postdisplay
+  restore
+  stbackuptheme
+  term_height
+  term_width
+  wrk_bold
+  wrk_stbold
 )
 
 # Welcoming message
 logs+=( "Welcome! |Number of user-created parameters: |#${#ZBROWSE_CHANGED_IPARAMS}" )
 
-# Generator for module 1
+# FUNCTION: iparams_generator_A() {{{
 iparams_generator_A() {
-    local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
-    local -a __aparam __atype __avalue
-    integer __pdiff __tdiff
+  local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
+  local -a __aparam __atype __avalue
+  integer __pdiff __tdiff
 
-    reply=( "${ZUI[MAGENTA]}## User-defined parameters (interactive shell use) ##${ZUI[FMT_END]}" )
+  reply=( "${ZUI[MAGENTA]}## User-defined parameters (interactive shell use) ##${ZUI[FMT_END]}" )
 
-    for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
-        [[ "$__param" = [?*\$#!] ]] && continue
-        __aparam=() __atype=() __avalue=() __tpe="${(Pt)__param}" __pdiff=0 __tdiff=0
+  for __param in "${ZBROWSE_CHANGED_IPARAMS[@]}"; do
+    [[ "$__param" = [?*\$#!] ]] && continue
+    __aparam=() __atype=() __avalue=() __tpe="${(Pt)__param}" __pdiff=0 __tdiff=0
 
-        __lparam="$__param"
-        (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
-        (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
+    __lparam="$__param"
+    (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
+    (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
-        -zui_std_button_ext "param_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" zbrowse_param_action __aparam
-        -zui_std_button_ext "type_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" zbrowse_type_action __atype
+    -zui_std_button_ext "param_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" zbrowse_param_action __aparam
+    -zui_std_button_ext "type_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" zbrowse_type_action __atype
 
-        if [[ "${(Pt)__param}" = *association* ]]; then
-            local -a elems
-            local txt
-            elems=( "${(Pkv@)__param}" )
-            elems=( "${(@)elems[1,50]}" )
-            elems=( "${(qq)elems[@]}" )
-            txt="${elems[*]}"
-            txt="${txt[1,300]}"
-            -zui_std_special_text "$txt" __avalue
-        elif [[ "${(Pt)__param}" = *array* ]]; then
-            local -a elems
-            local txt
-            elems=( "${(P@)__param}" )
-            elems=( "${(@)elems[1,50]}" )
-            elems=( "${(qq)elems[@]}" )
-            txt="${elems[*]}"
-            txt="${txt[1,300]}"
-            -zui_std_special_text "$txt" __avalue
-        else
-            local txt
-            txt="${(P)__param}"
-            txt="${txt[1,300]}"
-            -zui_std_special_text "${(qq)txt}" __avalue
-        fi
+    if [[ "${(Pt)__param}" = *association* ]]; then
+      local -a elems
+      local txt
+      elems=( "${(Pkv@)__param}" )
+      elems=( "${(@)elems[1,50]}" )
+      elems=( "${(qq)elems[@]}" )
+      txt="${elems[*]}"
+      txt="${txt[1,300]}"
+      -zui_std_special_text "$txt" __avalue
+    elif [[ "${(Pt)__param}" = *array* ]]; then
+      local -a elems
+      local txt
+      elems=( "${(P@)__param}" )
+      elems=( "${(@)elems[1,50]}" )
+      elems=( "${(qq)elems[@]}" )
+      txt="${elems[*]}"
+      txt="${txt[1,300]}"
+      -zui_std_special_text "$txt" __avalue
+    else
+      local txt
+      txt="${(P)__param}"
+      txt="${txt[1,300]}"
+      -zui_std_special_text "${(qq)txt}" __avalue
+    fi
 
-        reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
-    done
+    reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
+  done
 
-    # Non-selectable lines  Hops to jump with [ and ]   Local anchors
-    reply2=( 1 )            reply3=( 1 )                reply4=( )
-}
-
+  # Non-selectable lines  Hops to jump with [ and ]   Local anchors
+  reply2=( 1 )            reply3=( 1 )                reply4=( )
+} # }}}
+# FUNCTION: zbrowse_param_action() {{{
 zbrowse_param_action() {
-    local id="$1" mod="$2" data2="$3" data3="$4" data4="$5"
-    local tmp
+  local id="$1" mod="$2" data2="$3" data3="$4" data4="$5"
+  local tmp
 
-    if zle; then
-        zle reset-prompt
-        print
-        print -r -- "${fg[yellow]}Showing \`${fg[green]}$data2${fg[yellow]}':$reset_color"
-        ( declare -p "$data2" )
-        read -q tmp
-    else
-        print -r -- "${fg[yellow]}Showing \`$data2':$reset_color"
-        ( declare -p "$data2" )
-        read -q tmp
-    fi
+  if zle; then
+    zle reset-prompt
+    print
+    print -r -- "${fg[yellow]}Showing \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+    ( declare -p "$data2" )
+    read -q tmp
+  else
+    print -r -- "${fg[yellow]}Showing \`$data2':$reset_color"
+    ( declare -p "$data2" )
+    read -q tmp
+  fi
 
-    logs+=( "|||Showed declare-text of: |$data2" )
-}
-
+  logs+=( "|||Showed declare-text of: |$data2" )
+} # }}}
+# FUNCTION: zbrowse_type_action() {{{
 zbrowse_type_action() {
-    local id="$1" mod="$2" data2="$3" data3="$4" data4="$5"
-    local tmp
+  local id="$1" mod="$2" data2="$3" data3="$4" data4="$5"
+  local tmp
 
-    if zle; then
-        zle reset-prompt
-        print
-        print -r -- "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
-        echo "${(Pt)data2}"
-        read -q tmp
-    else
-        print -r -- "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
-        echo "${(Pt)data2}"
-        read -q tmp
-    fi
+  if zle; then
+    zle reset-prompt
+    print
+    print -r -- "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+    echo "${(Pt)data2}"
+    read -q tmp
+  else
+    print -r -- "${fg[yellow]}Showing ${fg[red]}type${fg[yellow]} of \`${fg[green]}$data2${fg[yellow]}':$reset_color"
+    echo "${(Pt)data2}"
+    read -q tmp
+  fi
 
-    logs+=( "|||Showed type of: |$data2" )
-}
-
+  logs+=( "|||Showed type of: |$data2" )
+} # }}}
+# FUNCTION: paramhist_generator_B() {{{
 paramhist_generator_B() {
-    local __mod="$1" __ice="$2" __arg="$3"
-    local __data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" __line __param __lparam __tpe __space=" "
-    integer __pdiff __tdiff
-    local -a __log __splitted __all_value __aparam __atype __avalue __aset
-    [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
-    __log=( "${(Oa)__log[@]}" )
+  local __mod="$1" __ice="$2" __arg="$3"
+  local __data_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zbrowse" __line __param __lparam __tpe __space=" "
+  integer __pdiff __tdiff
+  local -a __log __splitted __all_value __aparam __atype __avalue __aset
+  [[ -f "${__data_dir}/param.log" ]] && __log=( "${(@f)"$(<${__data_dir}/param.log)"}" )
+  __log=( "${(Oa)__log[@]}" )
 
-    # Variables of the text field
-    (( ${+ZUI[my_lmt_width]} == 0 )) && ZUI[my_lmt_width]=7
-    (( ${+ZUI[my_lmt_start]} == 0 )) && ZUI[my_lmt_start]=1
-    (( ${+ZUI[my_lmt_data]} == 0 )) && ZUI[my_lmt_data]="10"
+  # Variables of the text field
+  (( ${+ZUI[my_lmt_width]} == 0 )) && ZUI[my_lmt_width]=7
+  (( ${+ZUI[my_lmt_start]} == 0 )) && ZUI[my_lmt_start]=1
+  (( ${+ZUI[my_lmt_data]} == 0 )) && ZUI[my_lmt_data]="10"
 
-    noglob -zui_std_text_field "lmt_$mod" ZUI[my_lmt_width] ZUI[my_lmt_start] ZUI[my_lmt_data] "" "" "" '-zui_std_fly_mod_regen 2 1' __avalue
+  noglob -zui_std_text_field "lmt_$mod" ZUI[my_lmt_width] ZUI[my_lmt_start] ZUI[my_lmt_data] "" "" "" '-zui_std_fly_mod_regen 2 1' __avalue
 
-    reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}"
-            "Show |${__avalue[1]}| history entries:"
-    )
+  reply=( "${ZUI[MAGENTA]}## History of parameters' values ##${ZUI[FMT_END]}"
+    "Show |${__avalue[1]}| history entries:"
+  )
 
-    integer index=0
+  integer index=0
 
-    for __line in $__log; do
-        (( ++ index ))
+  for __line in $__log; do
+    (( ++ index ))
 
-        __aparam=() __atype=() __avalue=() __aset=() __pdiff=0 __tdiff=0
-        __splitted=( "${(@z)__line}" )
-        __tpe="${__splitted[1]}"
-        __param="${__splitted[2]}"
-        __splitted=( "${(Q@)__splitted[3,-1]}" )
-        __all_value=( "${(qq)__splitted[@]}" )
-        __splitted=( "${__all_value[@]//$'\n'/\\n}" )
+    __aparam=() __atype=() __avalue=() __aset=() __pdiff=0 __tdiff=0
+    __splitted=( "${(@z)__line}" )
+    __tpe="${__splitted[1]}"
+    __param="${__splitted[2]}"
+    __splitted=( "${(Q@)__splitted[3,-1]}" )
+    __all_value=( "${(qq)__splitted[@]}" )
+    __splitted=( "${__all_value[@]//$'\n'/\\n}" )
 
-        __lparam="$__param"
-        (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
-        (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
+    __lparam="$__param"
+    (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
+    (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
-        # Store the value for set-action
-        values[index]="${(j: :)__all_value}"
+    # Store the value for set-action
+    values[index]="${(j: :)__all_value}"
 
-        -zui_std_rc_button_ext "set_${index}" "$__mod" "$__param" "$__tpe" "$index" "${ZUI[YELLOW]}Set${ZUI[FMT_END]}" zbrowse_set_action __aset
-        -zui_std_special_text "${ZUI[CYAN]}${__lparam}${ZUI[FMT_END]}" __aparam
-        -zui_std_special_text "${ZUI[RED]}${__tpe}${ZUI[FMT_END]}" __atype
-        -zui_std_special_text "${${(j: :)__splitted}[1,300]}" __avalue
+    -zui_std_rc_button_ext "set_${index}" "$__mod" "$__param" "$__tpe" "$index" "${ZUI[YELLOW]}Set${ZUI[FMT_END]}" zbrowse_set_action __aset
+    -zui_std_special_text "${ZUI[CYAN]}${__lparam}${ZUI[FMT_END]}" __aparam
+    -zui_std_special_text "${ZUI[RED]}${__tpe}${ZUI[FMT_END]}" __atype
+    -zui_std_special_text "${${(j: :)__splitted}[1,300]}" __avalue
 
-        reply+=( "${__aset[1]}  ${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
+    reply+=( "${__aset[1]}  ${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
 
-        (( index >= ZUI[my_lmt_data] )) && break
-    done
+    (( index >= ZUI[my_lmt_data] )) && break
+  done
 
-    # Non-selectable lines  Hops to jump with [ and ]   Local anchors
-    reply2=( 1 )            reply3=( 1 )                reply4=( )
-}
-
+  # Non-selectable lines  Hops to jump with [ and ]   Local anchors
+  reply2=( 1 )            reply3=( 1 )                reply4=( )
+} # }}}
+# FUNCTION: zbrowse_set_action {{{
 zbrowse_set_action() {
-    local id="$1" mod="$2" param="$3" tpe="$4" index="$5"
-
-    case $tpe in
-        array)
-            -zui_util_to_cmd_line "typeset -ga $param; ${param}=( ${values[index]} )"
-            ;;
-        association)
-            -zui_util_to_cmd_line "typeset -gA $param; ${param}=( ${values[index]} )"
-            ;;
-        *)
-            -zui_util_to_cmd_line "typeset -g $param; ${param}=${values[index]}"
-            ;;
-    esac
-}
-
+  local id="$1" mod="$2" param="$3" tpe="$4" index="$5"
+  case $tpe in
+    array)
+      -zui_util_to_cmd_line "typeset -ga $param; ${param}=( ${values[index]} )"
+      ;;
+    association)
+      -zui_util_to_cmd_line "typeset -gA $param; ${param}=( ${values[index]} )"
+      ;;
+    *)
+      -zui_util_to_cmd_line "typeset -g $param; ${param}=${values[index]}"
+      ;;
+  esac
+} # }}}
+# FUNCTION: allparams_generator_C {{{
 allparams_generator_C() {
-    local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
-    local -a __aparam __atype __avalue
-    integer __pdiff __tdiff
+  local __mod="$1" __ice="$2" __arg="$3" __param __lparam __tpe __space=" "
+  local -a __aparam __atype __avalue
+  integer __pdiff __tdiff
 
-    reply=( "${ZUI[MAGENTA]}## All parameters ##${ZUI[FMT_END]}" )
+  reply=( "${ZUI[MAGENTA]}## All parameters ##${ZUI[FMT_END]}" )
 
-    if (( show_all == 0 )); then
-        -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 3 1'
-        # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
-    else
-        for __param in "${(iok)parameters[@]}"; do
-            [[ "$__param" = [?*\$#!@] ]] && continue
-            [[ -n "${all_black_list[(re)$__param]}" ]] && continue
+  if (( show_all == 0 )); then
+    -zui_std_rc_button "showall" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'internal=1; show_all=1; -zui_std_fly_mod_regen 3 1'
+    # -zui_std_rc_button "external_inline" "${ZUI[GREEN]}Show${ZUI[FMT_END]}" 'show_all=1; reply=( ",mod2_ice1," "" )'
+  else
+    for __param in "${(iok)parameters[@]}"; do
+      [[ "$__param" = [?*\$#!@] ]] && continue
+      [[ -n "${all_black_list[(re)$__param]}" ]] && continue
 
-            __aparam=() __atype=() __avalue=() __tpe="${(Pt)__param}" __pdiff=0 __tdiff=0
+      __aparam=() __atype=() __avalue=() __tpe="${(Pt)__param}" __pdiff=0 __tdiff=0
 
-            __lparam="$__param"
-            (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
-            (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
+      __lparam="$__param"
+      (( ${#__lparam} <= 25 )) && __pdiff=$(( 25 - ${#__lparam} )) || __lparam="${__lparam[1,22]}...";
+      (( ${#__tpe} <= 25 )) && __tdiff=$(( 25 - ${#__tpe} )) || __tpe="${__tpe[1,22]}...";
 
-            -zui_std_button_ext "param_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" zbrowse_param_action __aparam
-            -zui_std_button_ext "type_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" zbrowse_type_action __atype
+      -zui_std_button_ext "param_$__param" "$__mod" "$__param" "" "" "${ZUI[GREEN]}${__lparam}${ZUI[FMT_END]}" zbrowse_param_action __aparam
+      -zui_std_button_ext "type_$__param" "$__mod" "$__param" "" "" "${ZUI[YELLOW]}${__tpe}${ZUI[FMT_END]}" zbrowse_type_action __atype
 
-            if [[ "${(Pt)__param}" = *association* ]]; then
-                local -a elems
-                local txt
-                elems=( "${(Pkv@)__param}" )
-                elems=( "${(@)elems[1,50]}" )
-                elems=( "${(qq)elems[@]}" )
-                txt="${elems[*]}"
-                txt="${txt[1,300]}"
-                -zui_std_special_text "$txt" __avalue
-            elif [[ "${(Pt)__param}" = *array* ]]; then
-                local -a elems
-                local txt
-                elems=( "${(P@)__param}" )
-                elems=( "${(@)elems[1,50]}" )
-                elems=( "${(qq)elems[@]}" )
-                txt="${elems[*]}"
-                txt="${txt[1,300]}"
-                -zui_std_special_text "$txt" __avalue
-            else
-                local txt
-                txt="${(P)__param}"
-                txt="${txt[1,300]}"
-                -zui_std_special_text "${(qq)txt}" __avalue
-            fi
+      if [[ "${(Pt)__param}" = *association* ]]; then
+        local -a elems
+        local txt
+        elems=( "${(Pkv@)__param}" )
+        elems=( "${(@)elems[1,50]}" )
+        elems=( "${(qq)elems[@]}" )
+        txt="${elems[*]}"
+        txt="${txt[1,300]}"
+        -zui_std_special_text "$txt" __avalue
+      elif [[ "${(Pt)__param}" = *array* ]]; then
+        local -a elems
+        local txt
+        elems=( "${(P@)__param}" )
+        elems=( "${(@)elems[1,50]}" )
+        elems=( "${(qq)elems[@]}" )
+        txt="${elems[*]}"
+        txt="${txt[1,300]}"
+        -zui_std_special_text "$txt" __avalue
+      else
+        local txt
+        txt="${(P)__param}"
+        txt="${txt[1,300]}"
+        -zui_std_special_text "${(qq)txt}" __avalue
+      fi
 
-            reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
-        done
-    fi
+      reply+=( "${__aparam[1]}${(r:__pdiff+1:: :)__space} ${__atype[1]}${(r:__tdiff+1:: :)__space} ${__avalue[1]}" )
+    done
+  fi
 
-    # Non-selectable lines  Hops to jump with [ and ]   Local anchors
-    reply2=( 1 )            reply3=( 1 )                reply4=( )
-}
-
+  # Non-selectable lines
+  reply2=( 1 )
+  # Hops to jump with [ and ]
+  reply3=( 1 )
+  #  Local anchors
+  reply4=( )
+} # }}}
+# FUNCTION: -zui-standard-status-callback() # {{{
 -zui-standard-status-callback() {
-    [[ "${#logs}" -gt 0 ]] && { reply=( "${(s:|:@)logs[1]}" ); logs=( ${(@)logs[2,-1]} ); return 1; }
-    return 0  # 0 is no message
-}
+  [[ "${#logs}" -gt 0 ]] && { reply=( "${(s:|:@)logs[1]}" ); logs=( ${(@)logs[2,-1]} ); return 1; }
+  return 0  # 0 is no message
+} # }}}
 
-## Start application ##
+# Start application
 zui-event-loop 1:iparams_generator_A 1:paramhist_generator_B 1:allparams_generator_C
 
 -zui_std_cleanup serialize
 
 return 0
 
-# vim:ft=zsh
+# vim:ft=zsh sw=2 sts=2 et foldmarker={{{,}}} foldmethod=marker
