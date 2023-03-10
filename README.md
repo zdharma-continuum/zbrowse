@@ -32,6 +32,14 @@ Add `zinit load zdharma-continuum/zbrowse` to your `.zshrc` file. zinit will han
 plugin for you automatically the next time you start zsh. To update run
 `zinit update zdharma-continuum/zbrowse` (`update-all` can also be used).
 
+To remap the default bindkey (Ctrl+B) which conflicts with GNU readline, do the following:
+```zsh
+zinit ice wait"3" trackbinds bindmap"^B -> ^H; lucid
+zinit light zdharma-continuum/zbrowse
+```
+
+This will make Ctrl+H the default keybinding to invoke zbrowse.
+
 ### Antigen
 
 Add `antigen bundle zdharma-continuum/zbrowse` to your `.zshrc` file. Antigen will handle cloning
