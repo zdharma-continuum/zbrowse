@@ -49,7 +49,7 @@ automatically the next time you start zsh.
 ### Oh-My-Zsh
 
 1. `cd ~/.oh-my-zsh/custom/plugins`
-1. `git clone https://github.com/zdharma-continuum/zbrowse.git`
+1. `git clone https://github.com/zdharma-continuum/zbrowse`
 1. Add `zbrowse` to your plugin list
 
 ### Zgen
