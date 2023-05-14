@@ -28,13 +28,13 @@ If using a plugin manager, then `zinit` is recommended, but you can use any othe
 ### [zinit](https://github.com/zdharma-continuum/zinit)
 
 Add `zinit load zdharma-continuum/zbrowse` to your `.zshrc` file. zinit will handle cloning the plugin for you
-automatically the next time you start zsh. To update run `zinit update zdharma-continuum/zbrowse` (`update-all` can also
+automatically the next time you start zsh. To update run `zinit update zdharma-continuum/zbrowse` (`--all` can also
 be used).
 
 To remap the default bindkey (Ctrl+B) which conflicts with GNU readline, do the following:
 
 ```zsh
-zinit ice wait"3" trackbinds bindmap"^B -> ^H; lucid
+zinit ice wait"3" trackbinds bindmap"^B -> ^H;" lucid
 zinit light zdharma-continuum/zbrowse
 ```
 
