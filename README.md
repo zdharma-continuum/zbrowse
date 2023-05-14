@@ -1,44 +1,45 @@
-# ZBrowse [![Gitter][gitter-image]][gitter-link]
+# ZBrowse
 
-When doing shell work, it is often the case that `echo $variable` is invoked multiple times, to check result of a loop,
-etc. With ZBrowse, you just need to press `Ctrl-B`, which invokes the `ZBrowse` – `Zshell` variable browser:
+[![Gitter][gitter-image]][gitter-link]
+
+When doing shell work, `echo $variable` is often invoked multiple times to check the result of a loop.
+With Zbrowse, you need to press `Ctrl-B`, which invokes the `ZBrowse` – `Zshell` variable browser:
 
 ![ZBrowse](https://github.com/zdharma-continuum/zbrowse/blob/master/images/zbrowse.png)
 
-(you can resize the video like any web page)
-
 [![asciicast](https://asciinema.org/a/122018.png)](https://asciinema.org/a/122018)
 
-## Installation
+## Install
 
-First install the [ZUI](https://github.com/zdharma-continuum/zui) plugin (it's an UI library).
+First, install [ZUI](https://github.com/zdharma-continuum/zui) plugin (it's a UI library).
 
-**The plugin is "standalone"**, which means that only sourcing it is needed. So to install, unpack `zbrowse` somewhere
-and add
+**The plugin is "standalone"**, meaning only sourcing it is needed. So to install, unpack `zbrowse` somewhere
+and add the following snippet to your `zshrc`.
 
 ```zsh
-source {where-zbrowse-is}/zbrowse.plugin.zsh
+source <PATH TO ZBROWSE DIRECTORY>/zbrowse.plugin.zsh
 ```
-
-to `zshrc`.
 
 If using a plugin manager, then `zinit` is recommended, but you can use any other too, and also install with `Oh My Zsh`
 (by copying directory to `~/.oh-my-zsh/custom/plugins`).
 
 ### [zinit](https://github.com/zdharma-continuum/zinit)
 
-Add `zinit load zdharma-continuum/zbrowse` to your `.zshrc` file. zinit will handle cloning the plugin for you
-automatically the next time you start zsh. To update run `zinit update zdharma-continuum/zbrowse` (`--all` can also
-be used).
+Add `zinit load zdharma-continuum/zbrowse` to your `.zshrc` file. Zinit will automatically handle cloning the plugin for you
+the next time you start zsh. To update, run `zinit update zdharma-continuum/zbrowse`.
 
-To remap the default bindkey (Ctrl+B) which conflicts with GNU readline, do the following:
+To remap the default key binding `Ctrl+B`, which conflicts with GNU readline, use the following snippet:
 
 ```zsh
-zinit ice wait"3" trackbinds bindmap"^B -> ^H;" lucid
-zinit light zdharma-continuum/zbrowse
+zinit ice \
+  bindmap"^B -> ^H" \
+  lucid \
+  trackbinds \
+  wait"3"
+zinit light @zdharma-continuum/zbrowse
 ```
 
-This will make Ctrl+H the default keybinding to invoke zbrowse.
+This will make `Ctrl`+`H` the default keybinding to invoke Zbrowse.
 
 ### Antigen
 
@@ -48,7 +49,7 @@ automatically the next time you start zsh.
 ### Oh-My-Zsh
 
 1. `cd ~/.oh-my-zsh/custom/plugins`
-1. `git clone git@github.com:zdharma-continuum/zbrowse.git`
+1. `git clone https://github.com/zdharma-continuum/zbrowse`
 1. Add `zbrowse` to your plugin list
 
 ### Zgen
